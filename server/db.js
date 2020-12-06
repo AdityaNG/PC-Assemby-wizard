@@ -218,7 +218,8 @@ function createItem(item) {
     productURL = item.productURL
     price = item.price
     type = item.type
-    
+    type_name = item.type_name
+
     if (!item_uuid)
         return {error: "item_uuid null"}
 
@@ -234,7 +235,8 @@ function createItem(item) {
             imageURL: imageURL,
             productURL: productURL,
             price: price,
-            type: type
+            type: type,
+            type_name: type_name
         })
 
         db.saveDatabase()
@@ -375,7 +377,8 @@ function getAllTypes() {
 }
 
 function getType(params) {
-    console.log(params)
+    console.log("getType ")
+    console.log( params)
     return types.findOne(params);
 }
 
@@ -415,90 +418,110 @@ function generateID () {
  * Called only once to fill up DB with random values
  */
 function populateDB() {
-    let t1 = [
-        "Reliance",
-        "Tata",
-        "Harsha",
-        "Babaji"
-    ], t2 = [
-        "Grocery",
-        "Gifts",
-        "Electronics",
-        "Digital"
-    ], t3 = [
-        "Stall",
-        "Store",
-        "Shop",
-        "Center"
-    ], offerText = [//
+    //"", "", "", "", "", ""
+    let dummy_data = [
         {
-            url: ["https://5.imimg.com/data5/GV/DP/MY-3831378/500ml-plastic-water-bottle-500x500.jpg", "https://images-na.ssl-images-amazon.com/images/I/51EpktZ6FLL._SX425_.jpg", "https://5.imimg.com/data5/TD/JK/MY-7507778/plastic-water-jar-500x500.jpg", "https://images.prod.meredith.com/product/f62f8a8e393cc53df45b4a381730affd/1550826915323/l/sorbet-18-oz-summit-insulated-water-bottle"],
-            prod: "Water Bottle",
-        }, {
-            url: ["https://images-na.ssl-images-amazon.com/images/I/71nQ4AO0HEL._SY355_.jpg", "https://media.wired.com/photos/59e95567ce22fd0cca3c5262/master/pass/1M9A0509_V3.jpg", "https://www.amkette.com/wp-content/uploads/2017/11/1-1.jpg", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRst6yycXz3KAEEWaEIgKimj4VMBbYMbt2snY-TU4i4HL_JkmWs", "https://www.sony.co.in/image/b4698bb5d24076a3cd8d09e5dbb64834?fmt=pjpeg&wid=660&hei=660&bgcolor=F1F5F9&bgc=F1F5F9"],
-            prod: "Earphones"
-        }, {
-            url: ["https://cms.cloudinary.vpsvc.com//image/fetch/t_sitecore_images/f_auto,dpr_auto,w_auto/https://s3-eu-west-1.amazonaws.com/sitecore-media-bucket/prod%2Fen-AU%2F%7BA2567039-297C-445F-8007-371806181746%7D", "https://www.graphicimage.com/v/vspfiles/photos/PEN%20Full%20Wrap%20CRO-2.jpg", "https://www.dhresource.com/0x0s/f2-albu-g6-M00-57-07-rBVaSFshfZWAbYpEAANtPFn_AvQ678.jpg/luxury-fine-fountain-pen-0-5-mm-nib-ink-pens.jpg", "https://ae01.alicdn.com/kf/HTB1ugKSbaigSKJjSsppq6ybnpXa1/Best-Price-High-Quality-Original-Hero-1072-Fountain-Pen-Medium-Nib-0-5mm-Ink-Pens-Fashion.jpg_640x640.jpg"],
-            prod: "Pens"
-        }, {
-            url: ["https://target.scene7.com/is/image/Target/GUEST_65f6c2bb-714f-4328-9aca-07536c8961d7?wid=488&hei=488&fmt=pjpeg", "https://images-na.ssl-images-amazon.com/images/I/81wSa-vDWfL._SL1500_.jpg", "https://i5.walmartimages.com/asr/eb74754f-d053-46b6-9f94-8f78cb648fa3_1.48cb6d913d610799e169f42beca64ff2.png?odnHeight=450&odnWidth=450&odnBg=FFFFFF"],
-            prod: "Cereal"
-        }, {
-            url: ["http://assets.myntassets.com/assets/images/9037183/2019/3/28/e3e1e844-416e-45ee-a005-23a992f248461553771977458-Fossil-Grant-Blue-Watch-FS5061-1541553771976305-1.jpg", "https://images-na.ssl-images-amazon.com/images/I/71QHGTKiwAL._UX342_.jpg", "https://images-na.ssl-images-amazon.com/images/I/71gdBQP%2BqGL._UL1500_.jpg", "https://assets.myntassets.com/dpr_2,h_240,q_50,w_180/assets/images/2181833/2017/10/31/11509426591168-Fossil-Men-Smart-Watches-8451509426591053-1.jpg", "https://cdn.shopify.com/s/files/1/0238/6181/products/Weiss_Watch_Company_Automatic_Issue_Field_Watch_White_Dial_2048x2048.jpg"],
-            prod: "Watch"
-        }, {
-            url: ["https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1543951101-clubmonaco-1543951095.jpg", "https://huckberry.imgix.net/spree/products/401386/original/ItPVa58KrN_finisterre_tein_sweater_0_original.jpg?auto=compress%2Cformat&dpr=1&cs=tinysrgb&crop=top&fit=clip&w=600&h=600", "https://cdn3.volusion.com/csubk.ndmav/v/vspfiles/photos/1025-2.jpg?1484555937", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUnKWtlUeefVJ50loPeN9FJyWJay4bJ1qbasJMVS3ZBYdBYIW4"],
-            prod: "Sweater"
-        }, {
-            url: ["https://images-na.ssl-images-amazon.com/images/I/41Cx1ddB0dL._SX425_.jpg", "https://rukminim1.flixcart.com/image/704/704/jlfh6kw0/cycle/y/9/8/stomper-sstp16bl0001-10-hero-original-imaf8katydeb4upn.jpeg?q=70", "https://5.imimg.com/data5/HH/WN/MY-26779310/bmw-folding-cycle-500x500.jpg", "https://www.kyadu.com/wp-content/uploads/2019/05/jaguar-frame-ontrack-fat-tyre-bike-cycle-bicycle-red.jpg"],
-            prod: "Cycle"
-        }, {
-            url: ["https://images-na.ssl-images-amazon.com/images/I/51YLlAcgFGL.jpg", "https://slimages.macysassets.com/is/image/MCY/products/7/optimized/9029737_fpx.tif?op_sharpen=1&wid=500&hei=613&fit=fit,1&$filtersm$", "https://dks.scene7.com/is/image/GolfGalaxy/15WLRUCKWLF12XXXXGFT?wid=500&fmt=jpg", "https://i5.walmartimages.com/dfw/4ff9c6c9-f6a9/k2-_c29c8e1b-66ca-4268-8955-aef5c5ae9875.v1.jpg?odnWidth=282&odnHeight=282&odnBg=ffffff"],
-            prod: "Stuffed Toys"
-        }, {
-            url: ["https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c05962484.png", "https://www.lenovo.com/medias/lenovo-laptop-thinkpad-e485-hero.png?context=bWFzdGVyfHJvb3R8NjQ5MDF8aW1hZ2UvcG5nfGhmYy9oYmEvOTY1MzY4MjUzNjQ3OC5wbmd8ZDUyZDQyOWQ3YmZhMjZkNDg1ODAxNmQzYzZjNjNmNmM1MWNhMzQ0NThlMmI5ZmRlMGRjNTE0ZDgxNTkwZWRjMw", "https://brain-images-ssl.cdn.dixons.com/8/5/10180958/u_10180958.jpg", "https://media.wired.com/photos/5bedfc9d18d429059f2f104b/master/pass/surfacelaptop2.jpg"],
-            prod: "Laptop"
-        }, {
-            url: ["https://www.androidcentral.com/sites/androidcentral.com/files/styles/w1600h900crop_wm_brw/public/article_images/2018/08/samsung-galaxy-tab-s4-7_0.jpg?itok=1BtajAUv", "https://boygeniusreport.files.wordpress.com/2019/02/amazon-fire-hd-10-tablet.jpg?quality=98&strip=all&w=782", "https://images.samsung.com/is/image/samsung/p5/uk/home/PC_PCD_primary_section_Galaxy_Tab_S4.PNG?$ORIGIN_PNG$", "https://thumbs.nosto.com/quick/magento-656ad115/8/126092/86d45601a56b1b43b0f48c16341d8ec844612227808c5fb9825906f8024c382fa/A"],
-            prod: "Tablets"
+            type: "CPU",
+            data: [
+                {
+                    name: "Intel i9",
+                    description: "Intel® Core™ i9-9900K Processor (16M Cache, up to 5.00 GHz)",
+                    imageURL: "https://images-na.ssl-images-amazon.com/images/I/9115KaKEf5L._SX679_.jpg",
+                    productURL: "https://www.amazon.in/Intel-16-Thread-BX80684I99900K-Processor-Graphics/dp/B005404P9I/ref=sr_1_1?adgrpid=67454028468&dchild=1&ext_vrnc=hi&gclid=CjwKCAiAn7L-BRBbEiwAl9UtkFIVudT8qeV1ZpTJ5b2RcKdJ-SnbnNsqPqIYLA58GhF3tsdu4pH8pxoChMoQAvD_BwE&hvadid=294115396047&hvdev=c&hvlocphy=9062077&hvnetw=g&hvqmt=e&hvrand=14780019429929349787&hvtargid=kwd-299445300653&hydadcr=27811_1815119&keywords=intel+i9&qid=1607257093&sr=8-1&tag=googinhydr1-21",
+                    price: "Rs. 32,000"
+                }
+            ]
+        },
+        {
+            type: "GPU",
+            data: [
+                {
+                    name: "GeForce RTX 3090",
+                    description: "MSI GeForce RTX 3090 Gaming X Trio 24G I 24GB GDDR6X I 384-bit PCI Express Gen 4 Gaming Graphic Card",
+                    imageURL: "https://images-na.ssl-images-amazon.com/images/I/81061ussiIL._SL1500_.jpg",
+                    productURL: "https://www.amazon.in/MSI-GeForce-3090-24G-384-bit/dp/B08HM6D7TM/ref=asc_df_B08HM6D7TM/?tag=googleshopdes-21&linkCode=df0&hvadid=397083603974&hvpos=&hvnetw=g&hvrand=5167228311977899608&hvpone=&hvptwo=&hvqmt=&hvdev=c&hvdvcmdl=&hvlocint=&hvlocphy=9062077&hvtargid=pla-1009239005509&psc=1&ext_vrnc=hi",
+                    price: "Rs. 2,02,000"
+                }
+            ]
+        },
+        {
+            type: "Motherboard",
+            data: [
+                {
+                    name: "Gigabyte AMD",
+                    description: "GIGABYTE AMD A320, AM4 Socket,Ultra Durable Motherboard with Fast Onboard Storage with NVMe,PCIe Gen3 x4 110mm M.2, 4K Ultra HD Support (GA-A320M-S2H)",
+                    imageURL: "https://images-na.ssl-images-amazon.com/images/I/815Booiy-2L._SL1500_.jpg",
+                    productURL: "https://www.amazon.in/GIGABYTE-GA-A320M-S2H-Durable-Motherboard-Onboard/dp/B078KBKFZ6/ref=sr_1_3?crid=1LV614KIWY9A0&dchild=1&keywords=motherboard&qid=1607257311&s=computers&sprefix=mother%2Ccomputers%2C301&sr=1-3",
+                    price: "Rs. 4,649"
+                }
+            ]
+        },
+        {
+            type: "SSD",
+            data: [
+                {
+                    name: "WD 500GB",
+                    description: "WD Blue PCIe NVMe SSD, 2400MB/s R, 1750MB/s W, 5 Y Warranty, 500GB",
+                    imageURL: "https://images-na.ssl-images-amazon.com/images/I/71RTRS3oAjL._SL1500_.jpg",
+                    productURL: "https://www.amazon.in/Western-Digital-SN550-Internal-WDS500G2B0C/dp/B07YFF3JCN/ref=sr_1_7?dchild=1&keywords=SSD+internal&qid=1607257499&s=computers&sr=1-7",
+                    price: "Rs. 5,706"
+                }
+            ]
+        },
+        {
+            type: "HDD",
+            data: [
+                {
+                    name: "Consistent 320GB",
+                    description: "Consistent Hard Disk 320GB, Desktop",
+                    imageURL: "https://images-na.ssl-images-amazon.com/images/I/51gVORm3bKL.jpg",
+                    productURL: "https://www.amazon.in/Consistent-Hard-Disk-320GB-Desktop/dp/B08HKB7C4L/ref=sr_1_3?dchild=1&keywords=hard+disk+internal&qid=1607257392&s=computers&sr=1-3",
+                    price: "Rs. 1,150"
+                }
+            ]
+        },
+        {
+            type: "RAM",
+            data: [
+                {
+                    name: "Corsair 16 GB Vengeance",
+                    description: "Corsair 16 GB Vengeance LPX DDR4 3000MHz C16 XMP 2.0 Desktop Memory - Black",
+                    imageURL: "https://images-na.ssl-images-amazon.com/images/I/716uzH9r6%2BL._SL1500_.jpg",
+                    productURL: "https://www.amazon.in/Corsair-16GB-3000MHz-Memory-Module/dp/B07B4GNMS9/ref=sr_1_3?dchild=1&keywords=16gb+ram&qid=1607257584&s=computers&sr=1-3",
+                    price: "Rs. 4,899"
+                }
+            ]
         }
-    ], ofr = [
-        "Buy One get One free",
-        "Buy Two get One free",
-        "Buy Two get Two free",
-        "Buy Three get One free",
-        "65% Off",
-        "50% Off",
-        "25% Off",
-        "10% Off",
-        "Exchnage Offer",
-        "Student Discount : 20%",
-        "Student Discount : 40%",
-        "Student Discount : 15%"
-    ];
+    ]
     types_dummy = ["CPU", "GPU", "Motherboard", "HDD", "SSD", "RAM"]
     
         //setArea(ar);
-        for (var j=0; j<types_dummy.length; j++) {
-            let type_dummy_id = createType({
-                name: types_dummy[j]
-            })
-            //setStore(ar, st, t1[randInt(0,3)] + " " + t2[randInt(0,3)] + " " + t3[randInt(0,3)]);
-            for (var k=0; k<6; k++) {
-                let f = generateID();
-                let tmp = randEle(offerText);
-                let d1 = new Date(Date.now() - randInt(1000000000,9000000000));
-                let d2 = new Date(Date.now() + randInt(1000000000,9000000000));
-                //setOffer(ar, st, f, randEle(tmp.url), tmp.prod, randEle(ofr), d1.getTime(), d2.getTime());
-                setItem({
-                    //item_uuid: item_uuid,
-                    name: tmp.prod ,
-                    description: randEle(ofr),
-                    imageURL: tmp.url,
-                    productURL: tmp.url,
-                    price: randInt(10000,50000),
-                    type: type_dummy_id
+        for (j in dummy_data) {
+            var type_dummy = getType({name: dummy_data[j].type})
+            //var type_dummy = null
+            
+            console.log("Res : ")
+            console.log(type_dummy)
+            var type_dummy_id = ""
+            if ( type_dummy == null )
+                type_dummy_id = createType({
+                    name: dummy_data[j].type
                 })
+            else
+                type_dummy_id = type_dummy.type_uuid
+            //setStore(ar, st, t1[randInt(0,3)] + " " + t2[randInt(0,3)] + " " + t3[randInt(0,3)]);
+            for (var k=0; k<dummy_data[j].data.length; k++) {
+                for (var i=0; i<10; i++)
+                    createItem({
+                        //item_uuid: item_uuid,
+                        name: dummy_data[j].data[k].name,
+                        description: dummy_data[j].data[k].description,
+                        imageURL: dummy_data[j].data[k].imageURL,
+                        productURL: dummy_data[j].data[k].productURL,
+                        price: dummy_data[j].data[k].price,
+                        type: type_dummy_id,
+                        type_name: dummy_data[j].type
+                    });
             }
         }  
 }
