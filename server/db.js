@@ -148,7 +148,7 @@ function searchUsers(q) {
 
 function createCart(cart) {
     cart_uuid = cart.cart_uuid
-    items = cart.items
+    cart_items = cart.items
     
     if (!cart_uuid)
         return {error: "cart_uuid null"}
@@ -160,7 +160,7 @@ function createCart(cart) {
 
         carts.insert({
             cart_uuid: cart_uuid,
-            items: items
+            items: cart_items
         })
 
         db.saveDatabase()
@@ -173,7 +173,7 @@ function createCart(cart) {
 
 function setCart(cart) {
     cart_uuid = cart.cart_uuid
-    items = cart.items
+    cart_items = cart.items
 
     let search = getCart({cart_uuid: cart_uuid});
 
@@ -182,7 +182,7 @@ function setCart(cart) {
         return createCart(cart)
         //return {error: "cart does not exist"};
     } else {
-        search.items = items
+        search.items = cart_items
         carts.update(search);
         db.saveDatabase();
         return search;
@@ -191,7 +191,7 @@ function setCart(cart) {
 
 function deleteCart(cart) {
     cart_uuid = cart.cart_uuid
-    items = cart.items
+    cart_items = cart.items
 
     let search = getCart({cart_uuid: cart_uuid});
     if (search==null) {
@@ -306,7 +306,9 @@ function getItem(params) {
 
 function searchItems(q) {
     //console.log(items)
-    res = items.find(q)
+    var res = []
+    if (items.find)
+        res = items.find(q)
     //console.log(res)
     //console.log(items)
     return res

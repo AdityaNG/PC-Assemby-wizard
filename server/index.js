@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var fs = require("fs");
+const { getItem } = require('./db');
 
 const db = require('./db')
 const WEB_ROOT = "/web/"
@@ -54,9 +55,32 @@ app.get ('/api/users/login', (req, res) => { res.header("Access-Control-Allow-Or
 app.get ('/api/cart', (req, res) => { res.header("Access-Control-Allow-Origin", "*");
 	search = db.getCart(req.query)
 	if (search==null)
-		res.status(404).send({error : "cart not found"})
+		res.status(200).send({error : "cart not found"})
 	else
 		res.status(200).send(search);
+	res.end();
+});
+
+//http://localhost:8081/api/cart/get?cart_uuid=537c0d73-0167-487b-a794-aa07d63b3510
+app.get ('/api/cart/get', (req, res) => { res.header("Access-Control-Allow-Origin", "*");
+	search = db.getCart(req.query)
+	if (search==null) {
+		res.status(200).send({error : "cart not found"})
+	} else {
+		var cart_list = search.items
+		var tmp_list = cart_list.split(",")
+		var item_list = []
+		for (i in tmp_list) {
+			var item_i = tmp_list[i]
+			var tmp_buf = getItem({item_uuid: item_i})
+			//console.log(item_i)
+			//console.log(tmp_buf)
+			//console.log("--")
+			if (tmp_buf)
+				item_list.push(tmp_buf)
+		}
+		res.status(200).send(item_list);
+	}
 	res.end();
 });
 

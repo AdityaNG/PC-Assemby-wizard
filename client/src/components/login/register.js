@@ -34,7 +34,11 @@ export class Register extends React.Component {
       var result = JSON.parse(res)
       if (result.error) {
         alert("Error : " + result.error)
+        return;
       }
+      document.cookie = "user_uuid=" + result.user_uuid;
+      alert("Success : " + res)
+      window.location.reload()
     })
     console.log(reg_url)
   }

@@ -1,5 +1,5 @@
 import React from "react";
-import "./SearchPage.css";
+import "./ProductPage.css";
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -8,7 +8,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
+import RemoveShoppingCartIcon from '@material-ui/icons/RemoveShoppingCart';
 
 
 function httpGetAsync(theUrl, callback)
@@ -30,7 +30,7 @@ function httpGet(theUrl)
     return xmlHttp.responseText;
 }
 
-class SearchPage extends React.Component {
+class ProductPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -42,13 +42,14 @@ class SearchPage extends React.Component {
     //Add .right by default
     //this.rightSide.classList.add("right");
     const context = this;
-    httpGetAsync("http://localhost:8081/api/item/search", function(responseText) {
+    const cart_uuid = document.cookie.split("user_uuid=")[1].split(" ")[0]
+    httpGetAsync("http://localhost:8081/api/cart/get?cart_uuid=" + cart_uuid, function(responseText) {
         context.setState(prevState => ({ items: JSON.parse(responseText) }));
         console.log(context.state)
     })
   }
 
-  addToCart(item) {
+  removeFromCart(item) {
     console.log("Add to cart")
     console.log(item)
     const cart_uuid = document.cookie.split("user_uuid=")[1].split(" ")[0]
@@ -58,13 +59,14 @@ class SearchPage extends React.Component {
         console.log(result)
         var cart_list = ""
         if (result.error) {
-            // Does not exist, create it
-            cart_list = item.item_uuid
+            // Does not exist, do not delete anything
+            return
         } else {
             cart_list = result.items
             var tmp_list = cart_list.split(",")
-            if (tmp_list.indexOf(item.item_uuid) == -1)
-                tmp_list.push(item.item_uuid)
+            var serarch_index = tmp_list.indexOf(item.item_uuid)
+            if (serarch_index != -1)
+                tmp_list.splice(serarch_index, 1)
             cart_list = tmp_list.join()
             //cart_list = ""
         }
@@ -80,7 +82,6 @@ class SearchPage extends React.Component {
     this.setState(prevState => ({ isLogginActive: !prevState.isLogginActive }));
   }
 
-  network_req = null
   render() {
     const product_items = this.state.items
     var product_by_type = {}
@@ -104,7 +105,7 @@ class SearchPage extends React.Component {
               {Object.keys(product_by_type).map(type_uuid => (
                 <div>
                     <h2>{type_uuid}</h2>
-                    <div className="flex-container" style={{ width: "55%", margin: 10, overflowX: 'scroll', position: "relative", left: 400}}>
+                    <div className="flex-container" style={{ margin: 10, overflowX: 'scroll', position: "relative", left: 0}}>
                         {product_by_type[type_uuid].map(item => (
                             <div>
                                 <Card className="root">
@@ -128,8 +129,8 @@ class SearchPage extends React.Component {
                                             {item.price}
                                         </Typography>
                                         {isLoggedIn && (
-                                            <Button onClick={() => this.addToCart(item)} size="small" color="primary">
-                                                <AddShoppingCartIcon />
+                                            <Button onClick={() => this.removeFromCart(item)} size="small" color="primary">
+                                                <RemoveShoppingCartIcon />
                                             </Button>
                                         )}
                                         <a href={item.productURL} target="_blank">
@@ -156,7 +157,7 @@ class SearchPage extends React.Component {
   }
 }
 
-export default SearchPage;
+export default ProductPage;
 
 /**
  * <div className="flex-container">

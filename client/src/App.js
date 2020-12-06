@@ -2,6 +2,7 @@ import React from "react";
 import './App.css';
 import LoginPage from "./LoginPage"
 import SearchPage from "./SearchPage"
+import ProductPage from "./ProductPage"
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -14,6 +15,14 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 const PAGE_LOGIN = 0
 const PAGE_SEARCH = 1
 const PAGE_CART = 2
+
+function httpGet(theUrl)
+{
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+    xmlHttp.send( null );
+    return xmlHttp.responseText;
+}
 
 class App extends React.Component {
   constructor(props) {
@@ -57,6 +66,8 @@ class App extends React.Component {
 
     const isLoggedIn = document.cookie.split("user_uuid=")[1].split(" ")[0] != ""
 
+    const username = (isLoggedIn)? JSON.parse(httpGet("http://localhost:8081/api/users/search?user_uuid=" + document.cookie.split("user_uuid=")[1].split(" ")[0]))[0].name : ""
+
     return (
       <div className="App">
         
@@ -76,7 +87,7 @@ class App extends React.Component {
                   )}
                   {isLoggedIn && (
                     <div>
-                    <Button color="inherit" onClick={this.logout_mechanism.bind(this)} >Logout</Button>
+                    <Button color="inherit" onClick={this.logout_mechanism.bind(this)} >Logout {username}</Button>
                     <IconButton onClick={this.cart_page.bind(this)} edge="end" className="{classes.menuButton}" color="inherit" aria-label="menu">
                       <ShoppingCartIcon />
                     </IconButton>
@@ -100,12 +111,12 @@ class App extends React.Component {
                   PC Assembly Wiz - My Cart
                 </Typography>
                 <div style={{position: 'fixed', right: 25}}>
-                  <Button color="inherit" onClick={this.login_page.bind(this)} >Login</Button>
+                <Button color="inherit" onClick={this.logout_mechanism.bind(this)} >Logout {username}</Button>
                   
                 </div>
               </Toolbar>
             </AppBar>
-            <SearchPage />
+            <ProductPage />
           </div>
         )}
         
