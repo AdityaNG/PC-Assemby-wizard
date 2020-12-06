@@ -29,6 +29,11 @@ class App extends React.Component {
     
   }
 
+  logout_mechanism() {
+    document.cookie = "user_uuid="
+    window.location.reload()
+  }
+
   login_page() {
     console.log("Login")
     this.setState(prevState => ({ currentPage: PAGE_LOGIN }));
@@ -49,6 +54,9 @@ class App extends React.Component {
     const isLogginPage = this.state.currentPage == PAGE_LOGIN;
     const isSearchPage = this.state.currentPage == PAGE_SEARCH;
     const isCartPage = this.state.currentPage == PAGE_CART;
+
+    const isLoggedIn = document.cookie.split("user_uuid=")[1].split(" ")[0] != ""
+
     return (
       <div className="App">
         
@@ -63,10 +71,17 @@ class App extends React.Component {
                   PC Assembly Wiz
                 </Typography>
                 <div style={{position: 'fixed', right: 25}}>
-                  <Button color="inherit" onClick={this.login_page.bind(this)} >Login</Button>
-                  <IconButton onClick={this.cart_page.bind(this)} edge="end" className="{classes.menuButton}" color="inherit" aria-label="menu">
-                    <ShoppingCartIcon />
-                  </IconButton>
+                  {!isLoggedIn && (
+                    <Button color="inherit" onClick={this.login_page.bind(this)} >Login</Button>
+                  )}
+                  {isLoggedIn && (
+                    <div>
+                    <Button color="inherit" onClick={this.logout_mechanism.bind(this)} >Logout</Button>
+                    <IconButton onClick={this.cart_page.bind(this)} edge="end" className="{classes.menuButton}" color="inherit" aria-label="menu">
+                      <ShoppingCartIcon />
+                    </IconButton>
+                    </div>
+                  )}
                 </div>
               </Toolbar>
             </AppBar>

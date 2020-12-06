@@ -50,10 +50,14 @@ module.exports = {
 
 
 function createUser(user) {
+    name = user.name
     email = user.email
     password = user.password
     let search = getUser({email: email});
     
+    if (!name)
+        return {error: "name null"}
+
     if (!email)
         return {error: "email null"}
 
@@ -71,7 +75,8 @@ function createUser(user) {
         users.insert({
             user_uuid: user_uuid,
             email: email,
-            password : password
+            password : password,
+            name: name
         })
 
         db.saveDatabase()
@@ -86,6 +91,7 @@ function setUser(user) {
     user_uuid = user.user_uuid
     email = user.email
     password = user.password
+    name = user.name
 
     let search = getUser({user_uuid: user_uuid});
     if (search==null)
@@ -97,6 +103,7 @@ function setUser(user) {
         //search.user_uuid = search.user_uuid
         //search.email = search.email
         search.password = password
+        search.name = name
         /*search = {
             user_uuid: user_uuid,
             email: email,

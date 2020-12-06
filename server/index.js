@@ -40,6 +40,16 @@ app.get ('/api/users/search', (req, res) => { res.header("Access-Control-Allow-O
 	res.end();
 });
 
+//http://localhost:8081/api/users/login?email=adityang5@gmail.com&password=12345678
+app.get ('/api/users/login', (req, res) => { res.header("Access-Control-Allow-Origin", "*");
+	console.log(req.query);
+	var user_res = db.getUser(req.query)
+	if (user_res == null)
+		user_res = {error: "Login Failed"}
+	res.status(200).send(user_res);
+	res.end();
+});
+
 //http://localhost:8081/api/cart?cart_uuid=537c0d73-0167-487b-a794-aa07d63b3510
 app.get ('/api/cart', (req, res) => { res.header("Access-Control-Allow-Origin", "*");
 	search = db.getCart(req.query)

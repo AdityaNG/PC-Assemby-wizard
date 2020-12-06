@@ -43,6 +43,11 @@ class SearchPage extends React.Component {
     })
   }
 
+  addToCart(item) {
+    console.log("Add to cart")
+    console.log(item)
+  }
+
   changeState() {
     
     this.setState(prevState => ({ isLogginActive: !prevState.isLogginActive }));
@@ -58,6 +63,8 @@ class SearchPage extends React.Component {
         
         product_by_type[product_items[i].type_name].push(product_items[i])
     }
+
+    const isLoggedIn = document.cookie.split("user_uuid=")[1].split(" ")[0] != ""
 
     console.log(this.state.items)
 
@@ -76,7 +83,7 @@ class SearchPage extends React.Component {
                                 <Card className="root">
                                     <CardActionArea style={{height: 300, width: 300}}>
                                         <CardMedia
-                                            style={{height: 140}}
+                                            style={{height: 100}}
                                             image={item.imageURL}
                                             title={item.name}
                                             />
@@ -89,13 +96,15 @@ class SearchPage extends React.Component {
                                         </Typography>
                                         </CardContent>
                                     </CardActionArea>
-                                    <CardActions style={{height: 50, background: "white"}}>
+                                    <CardActions style={{height: 40, background: "white"}}>
                                         <Typography variant="h6" color="textPrimary" component="h2">
                                             {item.price}
                                         </Typography>
-                                        <Button size="small" color="primary">
-                                            <AddShoppingCartIcon />
-                                        </Button>
+                                        {isLoggedIn && (
+                                            <Button onClick={() => this.addToCart(item)} size="small" color="primary">
+                                                <AddShoppingCartIcon />
+                                            </Button>
+                                        )}
                                         <a href={item.productURL} target="_blank">
                                         <Button size="small" color="primary">
                                             Open
