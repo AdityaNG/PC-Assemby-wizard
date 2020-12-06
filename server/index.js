@@ -15,33 +15,33 @@ app.get('/:filePath', function(req, res){
 });
 
 //http://localhost:8081/api/users/create?email=adityang5@gmail.com&password=12345678
-app.get ('/api/users/create', (req, res) => {
+app.get ('/api/users/create', (req, res) => { res.header("Access-Control-Allow-Origin", "*");
 	res.status(200).send(db.createUser(req.query));
 	res.end();
 });
 
 //http://localhost:8081/api/users/set?user_uuid=537c0d73-0167-487b-a794-aa07d63b3510&email=adityang5@gmail.com&password=12345678
-app.get ('/api/users/set', (req, res) => {0
+app.get ('/api/users/set', (req, res) => { res.header("Access-Control-Allow-Origin", "*");0
 	res.status(200).send(db.setUser(req.query));
 	res.end();
 });
 
 //http://localhost:8081/api/users/delete?user_uuid=9963c6b8-fc39-41b0-b169-a1a7af05c4fc&email=adityang5@gmail.com&password=12345678
-app.get ('/api/users/delete', (req, res) => {
+app.get ('/api/users/delete', (req, res) => { res.header("Access-Control-Allow-Origin", "*");
 	console.log(req.query)
 	res.status(200).send(db.deleteUser(req.query));
 	res.end();
 });
 
 //http://localhost:8081/api/users/search?email=adityang5@gmail.com
-app.get ('/api/users/search', (req, res) => {
+app.get ('/api/users/search', (req, res) => { res.header("Access-Control-Allow-Origin", "*");
 	console.log(req.query);
 	res.status(200).send(db.searchUsers(req.query));
 	res.end();
 });
 
 //http://localhost:8081/api/cart?cart_uuid=537c0d73-0167-487b-a794-aa07d63b3510
-app.get ('/api/cart', (req, res) => {
+app.get ('/api/cart', (req, res) => { res.header("Access-Control-Allow-Origin", "*");
 	search = db.getCart(req.query)
 	if (search==null)
 		res.status(404).send({error : "cart not found"})
@@ -51,20 +51,20 @@ app.get ('/api/cart', (req, res) => {
 });
 
 //http://localhost:8081/api/cart/set?cart_uuid=537c0d73-0167-487b-a794-aa07d63b3510&items=1,2,3,4
-app.get ('/api/cart/set', (req, res) => {
+app.get ('/api/cart/set', (req, res) => { res.header("Access-Control-Allow-Origin", "*");
 	res.status(200).send(db.setCart(req.query));
 	res.end();
 });
 
 //http://localhost:8081/api/cart/delete?user_uuid=9963c6b8-fc39-41b0-b169-a1a7af05c4fc&email=adityang5@gmail.com&password=12345678
-app.get ('/api/cart/delete', (req, res) => {
+app.get ('/api/cart/delete', (req, res) => { res.header("Access-Control-Allow-Origin", "*");
 	console.log(req.query)
 	res.status(200).send(db.deleteCart(req.query));
 	res.end();
 });
 
 //http://localhost:8081/api/item?item_uuid=81242fa2-7344-454e-b320-2ddc06424281
-app.get ('/api/item', (req, res) => {
+app.get ('/api/item', (req, res) => { res.header("Access-Control-Allow-Origin", "*");
 	search = db.getItem(req.query)
 	if (search==null)
 		res.status(404).send({error : "item not found"})
@@ -74,14 +74,14 @@ app.get ('/api/item', (req, res) => {
 });
 
 //http://localhost:8081/api/item/search?name=Water%20Bottle
-app.get ('/api/item/search', (req, res) => {
+app.get ('/api/item/search', (req, res) => { res.header("Access-Control-Allow-Origin", "*");
 	console.log(req.query);
 	res.status(200).send(db.searchItems(req.query));
 	res.end();
 });
 
 //http://localhost:8081/api/type
-app.get ('/api/type', (req, res) => {
+app.get ('/api/type', (req, res) => { res.header("Access-Control-Allow-Origin", "*");
 	res.status(200).send(db.getAllTypes());
 	res.end();
 });
