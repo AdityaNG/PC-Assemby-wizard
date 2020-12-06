@@ -1,6 +1,10 @@
 # PC Assemby wizard
 
+![demo](https://github.com/AdityaNG/PC-Assemby-wizard/blob/master/media/demo.gif?raw=true)
 
+## About the project
+
+A website to quickly view and compare PC parts like CPUs, Motherboards, GPUs, etc. from across the web in one place
 
 ## How to run
 
