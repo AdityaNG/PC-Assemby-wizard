@@ -24,10 +24,10 @@ class SearchPage extends React.Component {
   componentDidMount() {
     //Add .right by default
     //this.rightSide.classList.add("right");
-    const context = this
+    const context = this;
     httpGetAsync("http://localhost:8081/api/item/search", function(responseText) {
         context.setState(prevState => ({ items: JSON.parse(responseText) }));
-        console.log(context.state) 
+        console.log(context.state)
     })
   }
 
@@ -38,18 +38,21 @@ class SearchPage extends React.Component {
 
   network_req = null
   render() {
-    const people = [
-        { name: 'chris' },
-        { name: 'nick' }
-    ];
+    const product_items = this.state.items
 
     return (
       <div className="App">
         <div className="search">
           <div className="container" ref={ref => (this.container = ref)}>
           <div>
-            {people.map(person => (
-                <p>{person.name}</p>
+            {product_items.map(item => (
+                <div>
+                    <h1>{item.name}</h1>
+                    <p>{item.description}</p>
+                    <img style={{height: 50, width: 50}} src={item.imageURL[0]}/>
+                    <a href={item.productURL[0]} target="_blank"><button>Open</button></a>
+                    <hr />
+                </div>
             ))}
           </div>
           </div>
@@ -59,19 +62,5 @@ class SearchPage extends React.Component {
     );
   }
 }
-
-const RightSide = props => {
-  return (
-    <div
-      className="right-side"
-      ref={props.containerRef}
-      onClick={props.onClick}
-    >
-      <div className="inner-container">
-        <div className="text">{props.current}</div>
-      </div>
-    </div>
-  );
-};
 
 export default SearchPage;
