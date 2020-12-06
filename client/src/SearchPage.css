@@ -28,11 +28,10 @@
     display: flex;
     background-color: #f1f1f1;
     padding: 10px;
-    height: 380px;
+    height: 400px;
   }
   
   .flex-container > div {
-    width: 300px;
-    height: 290px;
+    height: 310px;
     margin: 10px;
   }

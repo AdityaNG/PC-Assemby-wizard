@@ -8,6 +8,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 
 
 //import { Search, Register } from "./components/search/index";
@@ -62,18 +63,18 @@ class SearchPage extends React.Component {
 
     return (
       <div className="App">
-        <div className="search">
+        <div className="search" style={{position: 'relative', top: 80}}>
           <div className="container" ref={ref => (this.container = ref)}>
           <div>
               <div>
               {Object.keys(product_by_type).map(type_uuid => (
                 <div>
-                    <p>{type_uuid}</p>
-                    <div className="flex-container" style={{ width: 1000, overflowX: 'scroll'}}>
+                    <h2>{type_uuid}</h2>
+                    <div className="flex-container" style={{ width: "55%", margin: 10, overflowX: 'scroll', position: "relative", left: 400}}>
                         {product_by_type[type_uuid].map(item => (
                             <div>
                                 <Card className="root">
-                                    <CardActionArea style={{height: 290}}>
+                                    <CardActionArea style={{height: 300, width: 300}}>
                                         <CardMedia
                                             style={{height: 140}}
                                             image={item.imageURL}
@@ -86,25 +87,26 @@ class SearchPage extends React.Component {
                                         <Typography variant="body2" color="textSecondary" component="p">
                                             {item.description}
                                         </Typography>
+                                        </CardContent>
+                                    </CardActionArea>
+                                    <CardActions style={{height: 50, background: "white"}}>
                                         <Typography variant="h6" color="textPrimary" component="h2">
                                             {item.price}
                                         </Typography>
-                                        </CardContent>
-                                    </CardActionArea>
-                                    <CardActions style={{height: 50}}>
+                                        <Button size="small" color="primary">
+                                            <AddShoppingCartIcon />
+                                        </Button>
                                         <a href={item.productURL} target="_blank">
                                         <Button size="small" color="primary">
                                             Open
                                         </Button>
                                         </a>
-                                        <Button size="small" color="primary">
-                                        Save
-                                        </Button>
                                     </CardActions>
                                     </Card>
                             </div>
                         ))}
                     </div>
+                    <hr />
                 </div>
               ))}
               </div>
