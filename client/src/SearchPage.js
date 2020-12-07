@@ -15,7 +15,7 @@ function httpGetAsync(theUrl, callback)
 {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function() { 
-        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+        if (xmlHttp.readyState === 4 && xmlHttp.status === 200)
             callback(xmlHttp.responseText);
     }
     xmlHttp.open("GET", theUrl, true); // true for asynchronous 
@@ -63,7 +63,7 @@ class SearchPage extends React.Component {
         } else {
             cart_list = result.items
             var tmp_list = cart_list.split(",")
-            if (tmp_list.indexOf(item.item_uuid) == -1)
+            if (tmp_list.indexOf(item.item_uuid) === -1)
                 tmp_list.push(item.item_uuid)
             cart_list = tmp_list.join()
             //cart_list = ""
@@ -91,7 +91,12 @@ class SearchPage extends React.Component {
         product_by_type[product_items[i].type_name].push(product_items[i])
     }
 
-    const isLoggedIn = document.cookie.split("user_uuid=")[1].split(" ")[0] != ""
+    var isLoggedIn = false
+    try {
+      isLoggedIn = document.cookie.split("user_uuid=")[1].split(" ")[0] !== ""
+    } catch(e) {
+      var isLoggedIn = false
+    }
 
     console.log(this.state.items)
 

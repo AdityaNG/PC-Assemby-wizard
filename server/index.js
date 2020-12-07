@@ -43,7 +43,48 @@ app.get ('/api/users/search', (req, res) => { res.header("Access-Control-Allow-O
 
 //http://localhost:8081/api/users/login?email=adityang5@gmail.com&password=12345678
 app.get ('/api/users/login', (req, res) => { res.header("Access-Control-Allow-Origin", "*");
+	console.log("Login")
 	console.log(req.query);
+	var user_res = db.getUser(req.query)
+	if (user_res == null)
+		user_res = {error: "Login Failed"}
+	res.status(200).send(user_res);
+	res.end();
+});
+
+// POST Methods
+//http://localhost:8081/api/users/create?email=adityang5@gmail.com&password=12345678
+app.post ('/api/users/create', (req, res) => { res.header("Access-Control-Allow-Origin", "*");
+	console.log("Create")
+	console.log(req)
+	res.status(200).send(db.createUser(req.query));
+	res.end();
+});
+
+//http://localhost:8081/api/users/set?user_uuid=537c0d73-0167-487b-a794-aa07d63b3510&email=adityang5@gmail.com&password=12345678
+app.post ('/api/users/set', (req, res) => { res.header("Access-Control-Allow-Origin", "*");0
+	res.status(200).send(db.setUser(req.query));
+	res.end();
+});
+
+//http://localhost:8081/api/users/delete?user_uuid=9963c6b8-fc39-41b0-b169-a1a7af05c4fc&email=adityang5@gmail.com&password=12345678
+app.post ('/api/users/delete', (req, res) => { res.header("Access-Control-Allow-Origin", "*");
+	console.log(req.query)
+	res.status(200).send(db.deleteUser(req.query));
+	res.end();
+});
+
+//http://localhost:8081/api/users/search?email=adityang5@gmail.com
+app.post ('/api/users/search', (req, res) => { res.header("Access-Control-Allow-Origin", "*");
+	console.log(req.query);
+	res.status(200).send(db.searchUsers(req.query));
+	res.end();
+});
+
+//http://localhost:8081/api/users/login?email=adityang5@gmail.com&password=12345678
+app.post ('/api/users/login', (req, res) => { res.header("Access-Control-Allow-Origin", "*");
+	console.log("Login")
+	console.log(req.body);
 	var user_res = db.getUser(req.query)
 	if (user_res == null)
 		user_res = {error: "Login Failed"}

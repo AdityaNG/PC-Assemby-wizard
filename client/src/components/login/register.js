@@ -8,7 +8,7 @@ function httpGetAsync(theUrl, callback)
 {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function() { 
-        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+        if (xmlHttp.readyState === 4 && xmlHttp.status === 200)
             callback(xmlHttp.responseText);
     }
     xmlHttp.open("GET", theUrl, true); // true for asynchronous 
@@ -62,7 +62,7 @@ export class Register extends React.Component {
             </div>
             <div className="form-group">
               <label htmlFor="password">Password</label>
-              <input id="reg-password" type="text" name="password" placeholder="password" />
+              <input id="reg-password" type="password" name="password" placeholder="password" />
             </div>
           </div>
         </div>

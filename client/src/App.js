@@ -7,7 +7,6 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
-import MenuIcon from '@material-ui/core/Menu';
 import Typography from '@material-ui/core/Typography';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
@@ -60,11 +59,15 @@ class App extends React.Component {
 
   render() {
     
-    const isLogginPage = this.state.currentPage == PAGE_LOGIN;
-    const isSearchPage = this.state.currentPage == PAGE_SEARCH;
-    const isCartPage = this.state.currentPage == PAGE_CART;
-
-    const isLoggedIn = document.cookie.split("user_uuid=")[1].split(" ")[0] != ""
+    const isLogginPage = this.state.currentPage === PAGE_LOGIN;
+    const isSearchPage = this.state.currentPage === PAGE_SEARCH;
+    const isCartPage = this.state.currentPage === PAGE_CART;
+    var isLoggedIn = false
+    try {
+      isLoggedIn = document.cookie.split("user_uuid=")[1].split(" ")[0] !== ""
+    } catch(e) {
+      var isLoggedIn = false
+    }
 
     const username = (isLoggedIn)? JSON.parse(httpGet("http://localhost:8081/api/users/search?user_uuid=" + document.cookie.split("user_uuid=")[1].split(" ")[0]))[0].name : ""
 

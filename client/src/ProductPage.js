@@ -1,6 +1,5 @@
 import React from "react";
 import "./ProductPage.css";
-import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
@@ -15,7 +14,7 @@ function httpGetAsync(theUrl, callback)
 {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function() { 
-        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+        if (xmlHttp.readyState === 4 && xmlHttp.status === 200)
             callback(xmlHttp.responseText);
     }
     xmlHttp.open("GET", theUrl, true); // true for asynchronous 
@@ -65,7 +64,7 @@ class ProductPage extends React.Component {
             cart_list = result.items
             var tmp_list = cart_list.split(",")
             var serarch_index = tmp_list.indexOf(item.item_uuid)
-            if (serarch_index != -1)
+            if (serarch_index !== -1)
                 tmp_list.splice(serarch_index, 1)
             cart_list = tmp_list.join()
             //cart_list = ""
@@ -92,7 +91,12 @@ class ProductPage extends React.Component {
         product_by_type[product_items[i].type_name].push(product_items[i])
     }
 
-    const isLoggedIn = document.cookie.split("user_uuid=")[1].split(" ")[0] != ""
+    var isLoggedIn = false
+    try {
+      isLoggedIn = document.cookie.split("user_uuid=")[1].split(" ")[0] !== ""
+    } catch(e) {
+      var isLoggedIn = false
+    }
 
     console.log(this.state.items)
 

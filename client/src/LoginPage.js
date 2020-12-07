@@ -2,18 +2,6 @@ import React from "react";
 import "./LoginPage.css";
 import { Login, Register } from "./components/login/index";
 
-
-function httpGetAsync(theUrl, callback)
-{
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.onreadystatechange = function() { 
-        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-            callback(xmlHttp.responseText);
-    }
-    xmlHttp.open("GET", theUrl, true); // true for asynchronous 
-    xmlHttp.send(null);
-}
-
 class LoginPage extends React.Component {
   constructor(props) {
     super(props);
