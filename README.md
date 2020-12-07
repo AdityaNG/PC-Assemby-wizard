@@ -11,14 +11,23 @@ A website to quickly view and compare PC parts like CPUs, Motherboards, GPUs, et
 Clone the repository:
 
 ```bash
-$ git clone https://github.com/...
+$ git clone https://github.com/AdityaNG/PC-Assemby-wizard
 ```
 
-Execute the run command:
+Start the server:
 
 ```bash
+$ cd server
+$ npm install
 $ npm start
 ```
 
+Start the client:
 
-Open browser at http://localhost:8081
+```bash
+$ cd client
+$ npm install
+$ npm start
+```
+
+Open browser at http://localhost:3000

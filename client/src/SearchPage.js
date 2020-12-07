@@ -95,7 +95,7 @@ class SearchPage extends React.Component {
     try {
       isLoggedIn = document.cookie.split("user_uuid=")[1].split(" ")[0] !== ""
     } catch(e) {
-      var isLoggedIn = false
+      isLoggedIn = false
     }
 
     console.log(this.state.items)

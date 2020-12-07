@@ -66,7 +66,7 @@ class App extends React.Component {
     try {
       isLoggedIn = document.cookie.split("user_uuid=")[1].split(" ")[0] !== ""
     } catch(e) {
-      var isLoggedIn = false
+      isLoggedIn = false
     }
 
     const username = (isLoggedIn)? JSON.parse(httpGet("http://localhost:8081/api/users/search?user_uuid=" + document.cookie.split("user_uuid=")[1].split(" ")[0]))[0].name : ""
