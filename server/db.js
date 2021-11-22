@@ -22,7 +22,7 @@ db.loadDatabase({}, function () {
     type = db.addCollection('type');
     category = db.addCollection('category');
     //Use this for Dummy Data Generation
-    //populateDB();
+    populateDB();
 });
 
 
