@@ -5,15 +5,26 @@
 
 const { v4: uuidv4 } = require('uuid');
 
+const loki = require('lokijs');
+const db = new loki('./project_databse.json');
 
-const { Client } = require('pg')
-const client = new Client({
-    user: 'postgres',
-    password: '12345678',
-    database: 'pc_assembly',
-})
+let users = db.addCollection('users');
+let carts = db.addCollection('cart');
+let items = db.addCollection('items');
+let types = db.addCollection('type');
+let categorys = db.addCollection('category');
 
-client.connect()
+db.loadDatabase({}, function () {
+   
+    users = db.addCollection('users');
+    cart = db.addCollection('cart');
+    items = db.addCollection('items');
+    type = db.addCollection('type');
+    category = db.addCollection('category');
+    //Use this for Dummy Data Generation
+    //populateDB();
+});
+
 
 module.exports = {
     createUser: createUser,
@@ -38,87 +49,49 @@ module.exports = {
 }
 
 
-async function createUser(user) {
+function createUser(user) {
     name = user.name
     email = user.email
     password = user.password
-    return new Promise((reject, resolve) => {
-
-        if (!name)
-            reject( {error: "name null"} )
-
-        if (!email)
-            reject( {error: "email null"} )
-
-        if (!password)
-            reject( {error: "password null"} )
-
-        password = String(password)
-
-        if (password.length<8)
-            reject( {error: "password less than 8 chars"} )
-
-        let u = getUser({email: email});
-        u.then((search, e) => {    
-            if (e) {
-                reject(e)
-            } else {
-                if (search.length == 0) {
-                    user_uuid = uuidv4();
-
-                    qry = 'INSERT INTO users(user_uuid, email, name, password) Values(' + to_csv([user_uuid, email, name, password]) + ')'
-                    console.log(qry)
-                    client.query(qry).then((v, e) => {
-                        if (e) {
-                            reject(e)
-                        } else {
-                            resolve( {user_uuid: user_uuid} )
-                        }
-                    })   
-                } else {
-                    reject( {error: "user already exists", 'user':search} )
-                }
-            }
-        }).catch(e => {
-            reject(e)
-        })
-    })
+    let search = getUser({email: email});
     
+    if (!name)
+        return {error: "name null"}
+
+    if (!email)
+        return {error: "email null"}
+
+    if (!password)
+        return {error: "password null"}
+
+    password = String(password)
+
+    if (password.length<8)
+        return {error: "password less than 8 chars"}
+
+    if (search==null) {
+        user_uuid = uuidv4();
+
+        users.insert({
+            user_uuid: user_uuid,
+            email: email,
+            password : password,
+            name: name
+        })
+
+        db.saveDatabase()
+        
+        return {user_uuid: user_uuid}
+    } else {
+        return {error: "user already exists"}
+    }
 }
 
-async function setUser(user) {
+function setUser(user) {
     user_uuid = user.user_uuid
     email = user.email
     password = user.password
     name = user.name
-
-    return new Promise((resolve, reject) => {
-        let u = getUser({user_uuid: user_uuid, email: email});
-        u.then((search, e) => {    
-            if (e) {
-                reject(e)
-            } else {
-                if (search.length == 0) {
-                    reject( {error: "user does not exist"} );
-                } else {
-                    // User exists
-                    qry = 'UPDATE users SET ' + to_sql_cm({name:name, password: password}) + ' WHERE ' + to_sql({user_uuid: user_uuid, email: email})
-                    console.log(qry)
-                    client.query(qry).then((v, e) => {
-                        if (e) {
-                            reject(e)
-                        } else {
-                            resolve( {user_uuid: user_uuid} )
-                        }
-                    }).catch(e => {
-                        reject(e)
-                    })
-                }
-            }
-        }).catch(e => {
-            reject(e)
-        })
-    });
 
     let search = getUser({user_uuid: user_uuid});
     if (search==null)
@@ -145,52 +118,24 @@ async function setUser(user) {
     }
 }
 
-async function deleteUser(user) {
+function deleteUser(user) {
     user_uuid = user.user_uuid
     email = user.email
     password = user.password
-
-    return new Promise((resolve, reject) => {
-        let u = getUser({user_uuid: user_uuid, email: email, password: password});
-        u.then((search, e) => {    
-            if (e) {
-                reject(e)
-            } else {
-                if (search.length == 0) {
-                    reject( {error: "user does not exist"} );
-                } else {
-                    qry = 'DELETE FROM users WHERE ' + to_sql({user_uuid: user_uuid, email: email, password: password})
-                    console.log(qry)
-                    client.query(qry).then((v, e) => {
-                        if (e) {
-                            reject(e)
-                        } else {
-                            resolve( {user_uuid: user_uuid} )
-                        }
-                    }).catch(e => {
-                        reject(e)
-                    })
-                }
-            }
-        }).catch(e => {
-            reject(e)
-        })
-    });      
+    let search = getUser({user_uuid: user_uuid, email: email, password: password});
+    if (search==null) {
+        return {error: "user does not exist"};
+    }
+    users.findAndRemove({user_uuid: user_uuid, email: email, password});
+    db.saveDatabase();
+    return {status: "successful"};
 }
 
-async function getUser(params) {
-    qry = 'SELECT * FROM users WHERE ' + to_sql(params) + ' FETCH FIRST 1 ROWS ONLY'
-    console.log(qry)
-    const res = await client.query(qry)
-    return res.rows
+function getUser(params) {
+    return users.findOne(params);
 }
 
-async function searchUsers(params) {
-    qry = 'SELECT * FROM users WHERE ' + to_sql(params)
-    console.log(qry)
-    const res = await client.query(qry)
-    return res.rows
-    
+function searchUsers(q) {
     return users.find(q)
     return users.where(function(obj) {
         if (obj.offerDetails.includes(q) || obj.productDetails.includes(q)) {
@@ -290,23 +235,6 @@ function createItem(item) {
     if (search==null) {
         //item_uuid = uuidv4();
 
-        qry = "INSERT INTO Items(Item_ID, item_name, item_description, image_URL, product_URL, type_ID, type_name, price) Values\(\
-            '" + item_uuid + "',\
-            '" + name + "',\
-            '" + description + "',\
-            '" + imageURL + "',\
-            '" + productURL + "',\
-            '" + type + "',\
-            '" + type_name + "',\
-            " + price + "\)";
-
-        console.log(qry)
-
-        client.query(qry, (err, res) => {
-            console.log(res)
-            console.log(err ? err.stack : res.rows[0].message) // Hello World!
-            //client.end()
-        })
         items.insert({
             item_uuid: item_uuid,
             name: name,
@@ -372,11 +300,7 @@ function deleteItem(item) {
     return {status: "successful"};
 }
 
-async function getItem(params) {
-    qry = 'SELECT * FROM types WHERE ' + to_sql(params) + ' FETCH FIRST 1 ROWS ONLY'
-    console.log(qry)
-    const res = await client.query(qry)
-    return res.rows
+function getItem(params) {
     return items.findOne(params);
 }
 
@@ -461,15 +385,9 @@ function getAllTypes() {
     return types
 }
 
-async function getType(params) {
+function getType(params) {
     console.log("getType ")
     console.log( params)
-    qry = 'SELECT * FROM types WHERE ' + to_sql(params) + ' FETCH FIRST 1 ROWS ONLY'
-    console.log(qry)
-    const res = await client.query(qry)
-    console.log(res.rows)
-
-    return res.rows
     return types.findOne(params);
 }
 
@@ -515,7 +433,7 @@ function populateDB() {
     
         //setArea(ar);
         for (j in dummy_data) {
-            var type_dummy = getType({type_name: dummy_data[j].type})
+            var type_dummy = getType({name: dummy_data[j].type})
             //var type_dummy = null
             
             console.log("Res : ")
@@ -523,7 +441,7 @@ function populateDB() {
             var type_dummy_id = ""
             if ( type_dummy == null )
                 type_dummy_id = createType({
-                    type_name: dummy_data[j].type
+                    name: dummy_data[j].type
                 })
             else
                 type_dummy_id = type_dummy.type_uuid
@@ -542,56 +460,6 @@ function populateDB() {
                     });
             }
         }  
-}
-
-function to_sql(args) {
-    res = ""
-    ents = Object.entries(args)
-    for (i=0; i<ents.length; i++) {
-        key = ents[i][0]
-        val = ents[i][1]
-
-        if (typeof(val) == 'string')
-            res += key + "='" + val + "'"
-        else
-            res += key + "=" + String(val)
-
-        if (i<ents.length-1)
-            res += ' AND '
-    }
-    return res
-}
-
-function to_sql_cm(args) {
-    res = ""
-    ents = Object.entries(args)
-    for (i=0; i<ents.length; i++) {
-        key = ents[i][0]
-        val = ents[i][1]
-
-        if (typeof(val) == 'string')
-            res += key + "='" + val + "'"
-        else
-            res += key + "=" + String(val)
-
-        if (i<ents.length-1)
-            res += ', '
-    }
-    return res
-}
-
-function to_csv(args) {
-    res = ""
-    for (i=0; i<args.length; i++) {
-        val = args[i]
-        if (typeof(val) == 'string')
-            res += "'" + val + "'"
-        else
-            res += String(val)
-        if (i<args.length-1)
-            res += ', '
-    }
-    return res
 }
 
 /**
@@ -975,61 +843,3 @@ data: [
         }
     ]
 }]
-
-// populateDB()
-
-/*
-p = deleteUser({user_uuid: 'f639ef48-f022-4baa-a59b-30dc5eef5cee' , name: 'Sfrvekasdc', email: 'adfad@dvsw.com', password: 'passeqr1fe23r1e'}).then(function(v, e) {
-    console.log(v)
-    client.end()
-}).catch(e => {
-    console.log(e)
-    client.end()
-})
-// */
-
-/*
-p = createUser({name: 'Sfrvekasdc', email: 'adfad@dvsw.com', password: 'passeqr1fe23r1e'}).then(function(v, e) {
-    console.log(v)
-    client.end()
-}).catch(e => {
-    console.log(e)
-    client.end()
-})
-// */
-
-/*
-setUser({user_uuid: "u001", email: "adityang5@gmail.com", name: "Aditya NG", password: "new_passefqf"}).then(function(v, e) {
-    console.log(v)
-    searchUsers({user_uuid: "u001"}).then(function(v, e) {
-        console.log(v)
-        client.end()
-    }).catch(e => {
-        console.log(e)
-        client.end()
-    })
-}).catch(e => {
-    console.log(e)
-    client.end()
-})
-//*/
-
-/*
-searchUsers({name: "Aditya NG"}).then(function(v, e) {
-    console.log(v)
-    client.end()
-}).catch(e => {
-    console.log(e)
-    client.end()
-})
-//*/
-
- /*
-getUser({name: "Aditya NG"}).then(function(v, e) {
-    console.log(v)
-    client.end()
-}).catch(e => {
-    console.log(e)
-    client.end()
-})
-//*/
