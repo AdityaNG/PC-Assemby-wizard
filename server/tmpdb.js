@@ -1,3 +1,8 @@
+//import { fromString } from 'uuidv4';
+const { fromString } = require('uuidv4');
+
+console.log(fromString(JSON.stringify({obk: 'somwe'})))
+/*
 console.log(typeof('sad') == 'string')
 console.log(String)
 
@@ -14,3 +19,4 @@ client.query("SELECT * FROM users ;", (err, res) => {
     console.log(res.rows)
     client.end()
 })
+*/

@@ -4,7 +4,7 @@
  */
 
 const { v4: uuidv4 } = require('uuid');
-
+const { fromString } = require('uuidv4');
 
 const { Client } = require('pg')
 const client = new Client({
@@ -16,20 +16,18 @@ const client = new Client({
 client.connect()
 
 module.exports = {
-    createUser: createUser,
-    getUser: getUser,
-    setUser: setUser,
-    deleteUser: deleteUser,
-    searchUsers: searchUsers,
+    createUser: createUser,     // DONE
+    getUser: getUser,           // DONE
+    setUser: setUser,           // DONE
+    deleteUser: deleteUser,     // DONE
+    searchUsers: searchUsers,   // DONE
 
-    createCart: createCart,
+    addToCart: addToCart,
     getCart: getCart,
-    setCart: setCart,
-    deleteCart: deleteCart,
-    searchCarts: searchCarts,
+    removeFromCart: removeFromCart,
 
-    createItem: createItem,
-    getItem: getItem,
+    createItem: createItem,     // DONE
+    getItem: getItem,           // DONE
     setItem: setItem,
     deleteItem: deleteItem,
     searchItems: searchItems,
@@ -67,7 +65,7 @@ async function createUser(user) {
                     user_uuid = uuidv4();
 
                     qry = 'INSERT INTO users(user_uuid, email, name, password) Values(' + to_csv([user_uuid, email, name, password]) + ')'
-                    console.log(qry)
+                    //console.log(qry)
                     client.query(qry).then((v, e) => {
                         if (e) {
                             reject(e)
@@ -103,7 +101,7 @@ async function setUser(user) {
                 } else {
                     // User exists
                     qry = 'UPDATE users SET ' + to_sql_cm({name:name, password: password}) + ' WHERE ' + to_sql({user_uuid: user_uuid, email: email})
-                    console.log(qry)
+                    //console.log(qry)
                     client.query(qry).then((v, e) => {
                         if (e) {
                             reject(e)
@@ -160,7 +158,7 @@ async function deleteUser(user) {
                     reject( {error: "user does not exist"} );
                 } else {
                     qry = 'DELETE FROM users WHERE ' + to_sql({user_uuid: user_uuid, email: email, password: password})
-                    console.log(qry)
+                    //console.log(qry)
                     client.query(qry).then((v, e) => {
                         if (e) {
                             reject(e)
@@ -186,8 +184,10 @@ async function getUser(params) {
 }
 
 async function searchUsers(params) {
-    qry = 'SELECT * FROM users WHERE ' + to_sql(params)
-    console.log(qry)
+    qry = 'SELECT * FROM users'
+    if (Object.keys(params).length != 0)
+        qry = 'SELECT * FROM users WHERE ' + to_sql(params)
+    //console.log(qry)
     const res = await client.query(qry)
     return res.rows
     
@@ -200,65 +200,31 @@ async function searchUsers(params) {
     });
 }
 
+async function addToCart(params) {
+    item_uuid = params.item_uuid
+    user_uuid = params.user_uuid
 
-function createCart(cart) {
-    cart_uuid = cart.cart_uuid
-    cart_items = cart.items
-    
-    if (!cart_uuid)
-        return {error: "cart_uuid null"}
-
-    let search = getCart({cart_uuid: cart_uuid});
-
-    if (search==null) {
-        //cart_uuid = uuidv4();
-
-        carts.insert({
-            cart_uuid: cart_uuid,
-            items: cart_items
-        })
-
-        db.saveDatabase()
-        
-        return {cart_uuid: cart_uuid}
-    } else {
-        return {error: "cart already exists"}
-    }
+    qry = 'INSERT INTO cart(item_uuid, user_uuid, quantity) Values(' + to_csv([item_uuid, user_uuid, 1]) + ')'
+    //console.log(qry)
+    client.query(qry)
 }
 
-function setCart(cart) {
-    cart_uuid = cart.cart_uuid
-    cart_items = cart.items
+async function removeFromCart(params) {
+    item_uuid = params.item_uuid
+    user_uuid = params.user_uuid
 
-    let search = getCart({cart_uuid: cart_uuid});
-
-
-    if (search==null) {
-        return createCart(cart)
-        //return {error: "cart does not exist"};
-    } else {
-        search.items = cart_items
-        carts.update(search);
-        db.saveDatabase();
-        return search;
-    }
+    qry = 'DELETE FROM cart WHERE ' + to_sql({item_uuid: item_uuid, user_uuid: user_uuid})
+    //console.log(qry)
+    client.query(qry)
 }
 
-function deleteCart(cart) {
-    cart_uuid = cart.cart_uuid
-    cart_items = cart.items
 
-    let search = getCart({cart_uuid: cart_uuid});
-    if (search==null) {
-        return {error: "cart does not exist"};
-    }
-    carts.findAndRemove({cart_uuid: cart_uuid});
-    db.saveDatabase();
-    return {status: "successful"};
-}
-
-function getCart(params) {
-    console.log(params)
+async function getCart(params) {
+    //qry = 'SELECT * FROM cart WHERE ' + to_sql(params)
+    qry = 'SELECT * FROM cart JOIN items ON cart.item_uuid=items.item_uuid WHERE ' + to_sql(params)
+    //console.log(qry)
+    const res = await client.query(qry)
+    return res.rows
     return carts.findOne(params);
 }
 
@@ -273,57 +239,55 @@ function searchCarts(q) {
 }
 
 function createItem(item) {
-    item_uuid = uuidv4() //item.item_uuid
-    name = item.name
-    description = item.description
-    imageURL = item.imageURL
-    productURL = item.productURL
-    price = item.price
-    type = item.type
-    type_name = item.type_name
+    //item_uuid = uuidv4() //item.item_uuid
 
-    if (!item_uuid)
-        return {error: "item_uuid null"}
+    return new Promise((reject, resolve) => {
 
-    let search = getItem({item_uuid: item_uuid});
+        const item_uuid = fromString(JSON.stringify(item))
+        const name = item.name
+        const description = item.description
+        const imageURL = item.imageURL
+        const productURL = item.productURL
+        const price = item.price
+        const type = item.type
+        const type_name = item.type_name
 
-    if (search==null) {
-        //item_uuid = uuidv4();
+        let u = getItem({item_uuid: item_uuid});
+        u.then((search, e) => {    
+            if (e) {
+                reject(e)
+            } else {
+                if (search.length == 0) {
 
-        qry = "INSERT INTO Items(Item_ID, item_name, item_description, image_URL, product_URL, type_ID, type_name, price) Values\(\
-            '" + item_uuid + "',\
-            '" + name + "',\
-            '" + description + "',\
-            '" + imageURL + "',\
-            '" + productURL + "',\
-            '" + type + "',\
-            '" + type_name + "',\
-            " + price + "\)";
+                    qry = "INSERT INTO Items(item_uuid, item_name, item_description, imageURL, productURL, type_uuid, type_name, price) Values\(\
+                        '" + item_uuid + "',\
+                        '" + name + "',\
+                        '" + description + "',\
+                        '" + imageURL + "',\
+                        '" + productURL + "',\
+                        '" + type + "',\
+                        '" + type_name + "',\
+                        " + price + "\)";
 
-        console.log(qry)
-
-        client.query(qry, (err, res) => {
-            console.log(res)
-            console.log(err ? err.stack : res.rows[0].message) // Hello World!
-            //client.end()
+                    console.log(qry)
+                    client.query(qry).then((v, e) => {
+                        if (e) {
+                            console.log('problem is came')
+                            reject(e)
+                        } else {
+                            resolve( {item_uuid: item_uuid} )
+                        }
+                    })   
+                } else {
+                    console.log('problem is came 2')
+                    reject( {error: "item id already exists", 'item':search} )
+                }
+            }
+        }).catch(e => {
+            console.log('problem is came 3')
+            reject(e)
         })
-        items.insert({
-            item_uuid: item_uuid,
-            name: name,
-            description: description,
-            imageURL: imageURL,
-            productURL: productURL,
-            price: price,
-            type: type,
-            type_name: type_name
-        })
-
-        db.saveDatabase()
-        
-        return {item_uuid: item_uuid}
-    } else {
-        return {error: "item already exists"}
-    }
+    })
 }
 
 function setItem(item) {
@@ -373,57 +337,56 @@ function deleteItem(item) {
 }
 
 async function getItem(params) {
-    qry = 'SELECT * FROM types WHERE ' + to_sql(params) + ' FETCH FIRST 1 ROWS ONLY'
-    console.log(qry)
+    qry = 'SELECT * FROM items WHERE ' + to_sql(params) + ' FETCH FIRST 1 ROWS ONLY'
+    //console.log(qry)
     const res = await client.query(qry)
     return res.rows
     return items.findOne(params);
 }
 
-function searchItems(q) {
-    //console.log(items)
-    var res = []
-    if (items.find)
-        res = items.find(q)
-    //console.log(res)
-    //console.log(items)
-    return res
-
-    /*
-    return items.where(function(obj) {
-        if (obj.offerDetails.includes(q) || obj.productDetails.includes(q)) {
-            return true;
-        }
-        return false;
-    });
-    */
+async function searchItems(params) {
+    qry = 'SELECT * FROM items'
+    if (Object.keys(params).length != 0)
+        qry = 'SELECT * FROM items WHERE ' + to_sql(params)
+    console.log(qry)
+    const res = await client.query(qry)
+    return res.rows
 }
 
-
-
 function createType(type) {
-    type_uuid = uuidv4() //type.type_uuid
-    name = type.name
+    //type_uuid = uuidv4() //type.type_uuid
+    type_uuid = fromString(JSON.stringify(type))
+    name = type.type_name
     
-    if (!type_uuid)
-        return {error: "type_uuid null"}
+    return new Promise((reject, resolve) => {
 
-    let search = getType({type_uuid: type_uuid});
+        let u = getType({type_uuid: type_uuid});
+        u.then((search, e) => {    
+            if (e) {
+                reject(e)
+            } else {
+                if (search.length == 0) {
 
-    if (search==null) {
-        //type_uuid = uuidv4();
-
-        types.insert({
-            type_uuid: type_uuid,
-            name: name
+                    qry = "INSERT INTO types(type_uuid, type_name) Values\(\
+                        '" + type_uuid + "',\
+                        '" + name + "' \)";
+                        params
+                    //console.log(qry)
+                    client.query(qry).then((v, e) => {
+                        if (e) {
+                            reject(e)
+                        } else {
+                            resolve( {type_uuid: type_uuid} )
+                        }
+                    })   
+                } else {
+                    reject( {error: "type id already exists", 'type':search} )
+                }
+            }
+        }).catch(e => {
+            reject(e)
         })
-
-        db.saveDatabase()
-        
-        return {type_uuid: type_uuid}
-    } else {
-        return {error: "type already exists"}
-    }
+    })
 }
 
 function setType(type) {
@@ -462,15 +425,10 @@ function getAllTypes() {
 }
 
 async function getType(params) {
-    console.log("getType ")
-    console.log( params)
     qry = 'SELECT * FROM types WHERE ' + to_sql(params) + ' FETCH FIRST 1 ROWS ONLY'
-    console.log(qry)
+    //console.log(qry)
     const res = await client.query(qry)
-    console.log(res.rows)
-
     return res.rows
-    return types.findOne(params);
 }
 
 function searchTypes(q) {
@@ -508,40 +466,134 @@ function generateID () {
 /**
  * Called only once to fill up DB with random values
  */
-function populateDB() {
+ async function populateDB() {
     //"", "", "", "", "", ""
-    
-    types_dummy = ["CPU", "GPU", "Motherboard", "HDD", "SSD", "RAM"]
+    //return new Promise((reject, resolve) => {
+        q_list = []
+        types_dummy = ["CPU", "GPU", "Motherboard", "HDD", "SSD", "RAM"]
     
         //setArea(ar);
         for (j in dummy_data) {
-            var type_dummy = getType({type_name: dummy_data[j].type})
-            //var type_dummy = null
-            
-            console.log("Res : ")
-            console.log(type_dummy)
-            var type_dummy_id = ""
-            if ( type_dummy == null )
-                type_dummy_id = createType({
-                    type_name: dummy_data[j].type
-                })
-            else
-                type_dummy_id = type_dummy.type_uuid
-            //setStore(ar, st, t1[randInt(0,3)] + " " + t2[randInt(0,3)] + " " + t3[randInt(0,3)]);
+            //console.log(dummy_data[j])
+            //print()
             for (var k=0; k<dummy_data[j].data.length; k++) {
-                for (var i=0; i<1; i++)
-                    createItem({
+                for (var i=0; i<1; i++) {
+                    console.log(dummy_data[j].data[k].name)
+                    // /*
+                    q_list.push(createItem({
                         //item_uuid: item_uuid,
                         name: dummy_data[j].data[k].name,
                         description: dummy_data[j].data[k].description,
                         imageURL: dummy_data[j].data[k].imageURL,
                         productURL: dummy_data[j].data[k].productURL,
                         price: dummy_data[j].data[k].price,
-                        type: type_dummy_id,
+                        type: dummy_data[j].type,
                         type_name: dummy_data[j].type
-                    });
-            }
-        }  
+                    }))
+                    // */
+                    /*
+                    q_list.push( new Promise((reject, resolve) => {
+                        createItem({
+                            //item_uuid: item_uuid,
+                            name: dummy_data[j].data[k].name,
+                            description: dummy_data[j].data[k].description,
+                            imageURL: dummy_data[j].data[k].imageURL,
+                            productURL: dummy_data[j].data[k].productURL,
+                            price: dummy_data[j].data[k].price,
+                            type: dummy_data[j].type,
+                            type_name: dummy_data[j].type
+                        }).then(function(v, e) {
+                            console.log('success populateDB 1')
+                            resolve()
+                        }).catch(e => {
+                            console.log('error populateDB 1')
+                            reject(e)
+                        });
+                    }))
+                     */
+                }
+            }  
+        }
+        
+        return q_list
+        //resolve('Done')
+    //})
+}
+
+async function populateDB_old() {
+    //"", "", "", "", "", ""
+    //return new Promise((reject, resolve) => {
+        q_list = []
+        types_dummy = ["CPU", "GPU", "Motherboard", "HDD", "SSD", "RAM"]
+    
+        //setArea(ar);
+        for (j in dummy_data) {
+            //console.log(dummy_data[j])
+            //print()
+            q_list.push( new Promise((reject, resolve) => {
+                getType({type_name: dummy_data[j].type}).then(type_dummy => {
+                    //var type_dummy = getType({type_name: dummy_data[j].type})
+                    //var type_dummy = null
+                    
+                    //console.log("Res : ")
+                    //console.log(type_dummy)
+                    if (type_dummy.length == 0) {
+                        createType({
+                            type_name: dummy_data[j].type
+                        }).then(type_dummy_id => {
+                            for (var k=0; k<dummy_data[j].data.length; k++) {
+                                for (var i=0; i<1; i++)
+                                    createItem({
+                                        //item_uuid: item_uuid,
+                                        name: dummy_data[j].data[k].name,
+                                        description: dummy_data[j].data[k].description,
+                                        imageURL: dummy_data[j].data[k].imageURL,
+                                        productURL: dummy_data[j].data[k].productURL,
+                                        price: dummy_data[j].data[k].price,
+                                        type: type_dummy_id,
+                                        type_name: dummy_data[j].type
+                                    }).then(function(v, e) {
+                                        console.log('success populateDB 1')
+                                        resolve()
+                                    }).catch(e => {
+                                        console.log('error populateDB 1')
+                                        reject(e)
+                                    });
+                            }  
+                        })
+                    } else {
+                        type_dummy_id = type_dummy[0].type_uuid
+                        //setStore(ar, st, t1[randInt(0,3)] + " " + t2[randInt(0,3)] + " " + t3[randInt(0,3)]);
+                        for (var k=0; k<dummy_data[j].data.length; k++) {
+                            for (var i=0; i<1; i++)
+                                createItem({
+                                    //item_uuid: item_uuid,
+                                    name: dummy_data[j].data[k].name,
+                                    description: dummy_data[j].data[k].description,
+                                    imageURL: dummy_data[j].data[k].imageURL,
+                                    productURL: dummy_data[j].data[k].productURL,
+                                    price: dummy_data[j].data[k].price,
+                                    type: type_dummy_id,
+                                    type_name: dummy_data[j].type
+                                }).then(function(v, e) {
+                                    console.log('success populateDB 2')
+                                    resolve()
+                                }).catch(e => {
+                                    console.log('error populateDB 2')
+                                    reject(e)
+                                });
+                        }  
+                    }
+                }).catch(e => {
+                    console.log('error populateDB 3')
+                    reject(e)
+                })   
+            }))
+        }
+        
+        return q_list
+        //resolve('Done')
+    //})
 }
 
 function to_sql(args) {
@@ -976,7 +1028,113 @@ data: [
     ]
 }]
 
-// populateDB()
+function wait_for_qlist(q_list, i) {
+    return new Promise((reject, resolve) => {
+        console.log('wait_for_qlist : ' + i)
+        //console.log(q_list[i])
+        q_list[i].then(function(v, e) {
+            //console.log(v)
+            if (e) {
+                console.log("error in wait_for_qlist")
+            } else {
+                //console.log(v)
+                if (i+1 < q_list.length) {
+                    wait_for_qlist(q_list, i+1).then(function(v1, e1) {
+                        resolve()
+                    }).catch(e2 => {
+                        reject('e2'+i)
+                    })
+                } else {
+                    resolve()
+                }
+            }
+        }).catch(e3 => {
+            reject('e3'+i)
+        })
+    })
+}
+
+function wait_for_all() {
+    q_list = populateDB()
+    console.log('q_list')
+    console.log(q_list)
+    q_list.then(function(q_list_resolved, e1) {
+        wait_for_qlist(q_list_resolved, 0).then(function(v, e) {
+            console.log('Done wait_for_qlist')
+            //client.end()
+        }).catch(e1 => {
+            console.log('wait_for_all e1')
+            //client.end()
+        })
+    }).catch(e2 => {
+        console.log('wait_for_all e2')
+    })
+    
+}
+
+if (require.main === module) {
+    wait_for_all()
+}
+
+/*
+populateDB().then(function(v, e) {
+    console.log(v)
+    client.end()
+}).catch(e => {
+    console.log(e)
+    client.end()
+})
+// */
+
+/*
+createType({
+    type_name: "CPU"
+}).then(function(v, e) {
+    console.log(v)
+    client.end()
+}).catch(e => {
+    console.log(e)
+    client.end()
+})
+// */
+
+ /*
+getType({type_uuid: "1001"}).then(function(v, e) {
+    console.log(v)
+    client.end()
+}).catch(e => {
+    console.log(e)
+    client.end()
+})
+// */
+
+/*
+p = createItem({
+    name: "Toshiba P300 2TB",
+    description: "2TB 3.5 inch 7200 RPM High-Performance Desktop Hard Drive",
+    imageURL: "https://images-na.ssl-images-amazon.com/images/I/81hvN3-ZPEL._SY450_.jpg",
+    productURL: "https://www.amazon.in/Toshiba-Desktop-7200rpm-Internal-Drive/dp/B013JPKT9O",
+    price: 5500,
+    type: '4',
+    type_name: 'HDD'
+}).then(function(v, e) {
+    console.log(v)
+    client.end()
+}).catch(e => {
+    console.log(e)
+    client.end()
+})
+// */
+
+/*
+getItem({item_uuid: "1001"}).then(function(v, e) {
+    console.log(v)
+    client.end()
+}).catch(e => {
+    console.log(e)
+    client.end()
+})
+// */
 
 /*
 p = deleteUser({user_uuid: 'f639ef48-f022-4baa-a59b-30dc5eef5cee' , name: 'Sfrvekasdc', email: 'adfad@dvsw.com', password: 'passeqr1fe23r1e'}).then(function(v, e) {

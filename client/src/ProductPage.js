@@ -42,37 +42,21 @@ class ProductPage extends React.Component {
     //this.rightSide.classList.add("right");
     const context = this;
     const cart_uuid = document.cookie.split("user_uuid=")[1].split(" ")[0]
-    httpGetAsync("http://localhost:8081/api/cart/get?cart_uuid=" + cart_uuid, function(responseText) {
+    httpGetAsync("http://localhost:8081/api/cart?user_uuid=" + cart_uuid, function(responseText) {
         context.setState(prevState => ({ items: JSON.parse(responseText) }));
         console.log(context.state)
     })
   }
 
   removeFromCart(item) {
-    console.log("Add to cart")
+    console.log("Remove from cart")
     console.log(item)
     const cart_uuid = document.cookie.split("user_uuid=")[1].split(" ")[0]
-    httpGetAsync("http://localhost:8081/api/cart?cart_uuid=" + cart_uuid, function(res) {
-        var result = JSON.parse(res)
-        console.log("Result : ")
-        console.log(result)
-        var cart_list = ""
-        if (result.error) {
-            // Does not exist, do not delete anything
-            return
-        } else {
-            cart_list = result.items
-            var tmp_list = cart_list.split(",")
-            var serarch_index = tmp_list.indexOf(item.item_uuid)
-            if (serarch_index !== -1)
-                tmp_list.splice(serarch_index, 1)
-            cart_list = tmp_list.join()
-            //cart_list = ""
-        }
 
-        console.log("cart_list : " + cart_list)
-        httpGet("http://localhost:8081/api/cart/set?cart_uuid=" + cart_uuid + "&items=" + cart_list)
 
+    httpGetAsync("http://localhost:8081/api/cart/remove?user_uuid=" + cart_uuid + "&item_uuid=" +item.item_uuid, function(res) {
+      console.log("removeFromCart")
+      console.log(res)
     })
   }
 
@@ -116,7 +100,7 @@ class ProductPage extends React.Component {
                                     <CardActionArea style={{height: 300, width: 300}}>
                                         <CardMedia
                                             style={{height: 100}}
-                                            image={item.imageURL}
+                                            image={item.imageurl}
                                             title={item.name}
                                             />
                                         <CardContent>
@@ -137,7 +121,7 @@ class ProductPage extends React.Component {
                                                 <RemoveShoppingCartIcon />
                                             </Button>
                                         )}
-                                        <a href={item.productURL} target="_blank">
+                                        <a href={item.producturl} target="_blank">
                                         <Button size="small" color="primary">
                                             Open
                                         </Button>
@@ -169,8 +153,8 @@ export default ProductPage;
                 <div className="p-2">
                     <h3>{item.name}</h3>
                     <p>{item.description}</p>
-                    <img style={{height: 50, width: 50}} src={item.imageURL[0]}/>
-                    <a href={item.productURL[0]} target="_blank"><button>Open</button></a>
+                    <img style={{height: 50, width: 50}} src={item.imageurl[0]}/>
+                    <a href={item.producturl[0]} target="_blank"><button>Open</button></a>
                 </div>
             ))}
           </div>

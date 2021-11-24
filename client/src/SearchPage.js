@@ -52,26 +52,11 @@ class SearchPage extends React.Component {
     console.log("Add to cart")
     console.log(item)
     const cart_uuid = document.cookie.split("user_uuid=")[1].split(" ")[0]
-    httpGetAsync("http://localhost:8081/api/cart?cart_uuid=" + cart_uuid, function(res) {
-        var result = JSON.parse(res)
-        console.log("Result : ")
-        console.log(result)
-        var cart_list = ""
-        if (result.error) {
-            // Does not exist, create it
-            cart_list = item.item_uuid
-        } else {
-            cart_list = result.items
-            var tmp_list = cart_list.split(",")
-            if (tmp_list.indexOf(item.item_uuid) === -1)
-                tmp_list.push(item.item_uuid)
-            cart_list = tmp_list.join()
-            //cart_list = ""
-        }
 
-        console.log("cart_list : " + cart_list)
-        httpGet("http://localhost:8081/api/cart/set?cart_uuid=" + cart_uuid + "&items=" + cart_list)
 
+    httpGetAsync("http://localhost:8081/api/cart/add?user_uuid=" + cart_uuid + "&item_uuid=" +item.item_uuid, function(res) {
+      console.log("addToCart")
+      console.log(res)
     })
   }
 
@@ -107,7 +92,7 @@ class SearchPage extends React.Component {
           <div>
               <div>
               {Object.keys(product_by_type).map(type_uuid => (
-                <div>
+                <div key={type_uuid}>
                     <h2>{type_uuid}</h2>
                     <div className="flex-container" style={{ width: "55%", margin: 10, overflowX: 'scroll', position: "relative", left: 400}}>
                         {product_by_type[type_uuid].map(item => (
@@ -116,7 +101,7 @@ class SearchPage extends React.Component {
                                     <CardActionArea style={{height: 300, width: 300}}>
                                         <CardMedia
                                             style={{height: 100}}
-                                            image={item.imageURL}
+                                            image={item.imageurl}
                                             title={item.name}
                                             />
                                         <CardContent>
@@ -137,7 +122,7 @@ class SearchPage extends React.Component {
                                                 <AddShoppingCartIcon />
                                             </Button>
                                         )}
-                                        <a href={item.productURL} target="_blank">
+                                        <a href={item.producturl} target="_blank">
                                         <Button size="small" color="primary">
                                             Open
                                         </Button>
@@ -169,8 +154,8 @@ export default SearchPage;
                 <div className="p-2">
                     <h3>{item.name}</h3>
                     <p>{item.description}</p>
-                    <img style={{height: 50, width: 50}} src={item.imageURL[0]}/>
-                    <a href={item.productURL[0]} target="_blank"><button>Open</button></a>
+                    <img style={{height: 50, width: 50}} src={item.imageurl[0]}/>
+                    <a href={item.producturl[0]} target="_blank"><button>Open</button></a>
                 </div>
             ))}
           </div>

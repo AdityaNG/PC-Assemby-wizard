@@ -37,19 +37,29 @@ app.get ('/api/users/delete', (req, res) => { res.header("Access-Control-Allow-O
 //http://localhost:8081/api/users/search?email=adityang5@gmail.com
 app.get ('/api/users/search', (req, res) => { res.header("Access-Control-Allow-Origin", "*");
 	console.log(req.query);
-	res.status(200).send(db.searchUsers(req.query));
-	res.end();
+	db.searchUsers(req.query).then( (v, e) => {
+		res.status(200).send(v);
+		res.end();
+	})
 });
 
 //http://localhost:8081/api/users/login?email=adityang5@gmail.com&password=12345678
 app.get ('/api/users/login', (req, res) => { res.header("Access-Control-Allow-Origin", "*");
-	console.log("Login")
+	console.log("Login GET")
+	console.log(req.body);
 	console.log(req.query);
-	var user_res = db.getUser(req.query)
-	if (user_res == null)
-		user_res = {error: "Login Failed"}
-	res.status(200).send(user_res);
-	res.end();
+	db.getUser(req.query).then((user_res, e) => {
+		if (user_res.length == 0)
+			user_res = {error: "Login Failed"}
+		else
+			user_res = user_res[0]
+		console.log(user_res)
+		res.status(200).send(user_res);
+		res.end();
+	}).catch(e => {
+		res.status(300).send(e);
+		res.end();
+	})
 });
 
 // POST Methods
@@ -85,57 +95,48 @@ app.post ('/api/users/search', (req, res) => { res.header("Access-Control-Allow-
 app.post ('/api/users/login', (req, res) => { res.header("Access-Control-Allow-Origin", "*");
 	console.log("Login")
 	console.log(req.body);
-	var user_res = db.getUser(req.query)
-	if (user_res == null)
-		user_res = {error: "Login Failed"}
-	res.status(200).send(user_res);
-	res.end();
+	console.log(req.query);
+	db.getUser(req.query).then((user_res, e) => {
+		if (user_res.length == 0)
+			user_res = {error: "Login Failed"}
+
+		console.log(user_res)
+		res.status(200).send(user_res);
+		res.end();
+	}).catch(e => {
+		res.status(300).send(e);
+		res.end();
+	})
 });
 
 //http://localhost:8081/api/cart?cart_uuid=537c0d73-0167-487b-a794-aa07d63b3510
 app.get ('/api/cart', (req, res) => { res.header("Access-Control-Allow-Origin", "*");
-	search = db.getCart(req.query)
-	if (search==null)
-		res.status(200).send({error : "cart not found"})
-	else
-		res.status(200).send(search);
-	res.end();
-});
-
-//http://localhost:8081/api/cart/get?cart_uuid=537c0d73-0167-487b-a794-aa07d63b3510
-app.get ('/api/cart/get', (req, res) => { res.header("Access-Control-Allow-Origin", "*");
-	search = db.getCart(req.query)
-	if (search==null) {
-		res.status(200).send({error : "cart not found"})
-	} else {
-		var cart_list = search.items
-		var tmp_list = cart_list.split(",")
-		var item_list = []
-		for (i in tmp_list) {
-			var item_i = tmp_list[i]
-			var tmp_buf = getItem({item_uuid: item_i})
-			//console.log(item_i)
-			//console.log(tmp_buf)
-			//console.log("--")
-			if (tmp_buf)
-				item_list.push(tmp_buf)
+	db.getCart(req.query).then( (search, e) => {
+		if (search.length==0)
+			res.status(200).send({error : "cart not found"})
+		else {
+			res.status(200).send(search);
 		}
-		res.status(200).send(item_list);
-	}
-	res.end();
+		res.end();
+	})
 });
 
-//http://localhost:8081/api/cart/set?cart_uuid=537c0d73-0167-487b-a794-aa07d63b3510&items=1,2,3,4
-app.get ('/api/cart/set', (req, res) => { res.header("Access-Control-Allow-Origin", "*");
-	res.status(200).send(db.setCart(req.query));
-	res.end();
+app.get ('/api/cart/add', (req, res) => { res.header("Access-Control-Allow-Origin", "*");
+	db.addToCart(req.query).then( (v, e) => {
+		res.status(200).send({
+			operation: 'addToCart'
+		});
+		res.end();
+	})
 });
 
-//http://localhost:8081/api/cart/delete?user_uuid=9963c6b8-fc39-41b0-b169-a1a7af05c4fc&email=adityang5@gmail.com&password=12345678
-app.get ('/api/cart/delete', (req, res) => { res.header("Access-Control-Allow-Origin", "*");
-	console.log(req.query)
-	res.status(200).send(db.deleteCart(req.query));
-	res.end();
+app.get ('/api/cart/remove', (req, res) => { res.header("Access-Control-Allow-Origin", "*");
+	db.removeFromCart(req.query).then( (v, e) => {
+		res.status(200).send({
+			operation: 'removeFromCart'
+		});
+		res.end();
+	})
 });
 
 //http://localhost:8081/api/item?item_uuid=81242fa2-7344-454e-b320-2ddc06424281
@@ -151,8 +152,20 @@ app.get ('/api/item', (req, res) => { res.header("Access-Control-Allow-Origin", 
 //http://localhost:8081/api/item/search?name=Water%20Bottle
 app.get ('/api/item/search', (req, res) => { res.header("Access-Control-Allow-Origin", "*");
 	console.log(req.query);
-	res.status(200).send(db.searchItems(req.query));
-	res.end();
+	db.searchItems(req.query).then((v, e) => {
+		for (i in v) {
+			v[i]['type'] = {
+				'type_uuid': v[i].type_uuid
+			}
+			v[i]['name'] = v[i].item_name
+			v[i]['description'] = v[i].item_description
+			
+		}
+		
+		//console.log(v)
+		res.status(200).send(v);
+		res.end();
+	})
 });
 
 //http://localhost:8081/api/type
