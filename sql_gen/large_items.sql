@@ -1,0 +1,3 @@
+\c pc_assembly
+
+INSERT INTO Items(item_uuid, item_name, item_description, image_URL, product_URL, type_uuid, type_name, price) Values(                        '07072f92-4b50-49f3-80bb-5ef3866e188d',                        'Toshiba P300 2TB',                        '2TB 3.5 inch 7200 RPM High-Performance Desktop Hard Drive',                        'https://images-na.ssl-images-amazon.com/images/I/81hvN3-ZPEL._SY450_.jpg',                        'https://www.amazon.in/Toshiba-Desktop-7200rpm-Internal-Drive/dp/B013JPKT9O',                        'undefined',                        'HDD',                        5500);

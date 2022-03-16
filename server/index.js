@@ -49,14 +49,21 @@ app.get ('/api/users/login', (req, res) => { res.header("Access-Control-Allow-Or
 	console.log(req.body);
 	console.log(req.query);
 	db.getUser(req.query).then((user_res, e) => {
+		if (e)
+			console.log(e)
+			
 		if (user_res.length == 0)
 			user_res = {error: "Login Failed"}
 		else
 			user_res = user_res[0]
+		
 		console.log(user_res)
 		res.status(200).send(user_res);
 		res.end();
 	}).catch(e => {
+		if (e)
+			console.log(e)
+			
 		res.status(300).send(e);
 		res.end();
 	})
@@ -97,6 +104,9 @@ app.post ('/api/users/login', (req, res) => { res.header("Access-Control-Allow-O
 	console.log(req.body);
 	console.log(req.query);
 	db.getUser(req.query).then((user_res, e) => {
+		if (e)
+			console.log(e)
+
 		if (user_res.length == 0)
 			user_res = {error: "Login Failed"}
 
@@ -104,6 +114,9 @@ app.post ('/api/users/login', (req, res) => { res.header("Access-Control-Allow-O
 		res.status(200).send(user_res);
 		res.end();
 	}).catch(e => {
+		if (e)
+			console.log(e)
+
 		res.status(300).send(e);
 		res.end();
 	})
@@ -155,8 +168,10 @@ app.get ('/api/item/search', (req, res) => { res.header("Access-Control-Allow-Or
 	db.searchItems(req.query).then((v, e) => {
 		for (i in v) {
 			v[i]['type'] = {
-				'type_uuid': v[i].type_uuid
+				'type_uuid': v[i].type_uuid,
+				'type_name': v[i].type_uuid.split("_")[1]
 			}
+			v[i]['type_name'] = v[i].type_uuid.split("_")[1]
 			v[i]['name'] = v[i].item_name
 			v[i]['description'] = v[i].item_description
 			
