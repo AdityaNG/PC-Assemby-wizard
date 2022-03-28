@@ -1,6 +1,6 @@
 package pcassembly.Controller;
 
-import pcassembly.Model.Items;
+import pcassembly.Model.*;
 import java.util.*;
 import java.net.*;
 import java.sql.Connection;
@@ -33,6 +33,22 @@ public class SQLHelper {
          e.printStackTrace();
       }
    }  
+
+   public ArrayList<Users> getAllUsers() throws MalformedURLException, SQLException {
+      ResultSet rs = this.runCommand( "SELECT * FROM USERS;" );
+      ArrayList<Users> users = new ArrayList<Users>();
+      while ( rs.next() ) {
+         Users i = new Users();
+         i.userUUID = UUID.nameUUIDFromBytes(rs.getString("user_uuid").getBytes());
+         i.name = rs.getString("name");
+         i.email = rs.getString("email");
+         i.password = rs.getString("password");
+
+         users.add(i);
+      }
+      rs.close();
+      return users;
+   }
 
    public ArrayList<Items> getAllItems() throws MalformedURLException, SQLException {
       ResultSet rs = this.runCommand( "SELECT * FROM ITEMS;" );
