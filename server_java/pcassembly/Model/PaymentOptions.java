@@ -1,15 +1,16 @@
+package pcassembly.Model;
 
 import java.util.*;
 
 /**
  * 
  */
-public class Payment_Options {
+public class PaymentOptions {
 
     /**
      * Default constructor
      */
-    public Payment_Options() {
+    public PaymentOptions() {
     }
 
     /**

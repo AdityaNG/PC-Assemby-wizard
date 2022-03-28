@@ -9,7 +9,7 @@
 			"_parent": {
 				"$ref": "AAAAAAFF+h6SjaM2Hec="
 			},
-			"name": "Model1",
+			"name": "pcassembly",
 			"ownedElements": [
 				{
 					"_type": "UMLClassDiagram",
@@ -70,9 +70,9 @@
 											},
 											"visible": false,
 											"font": "Arial;13;0",
-											"width": 80.9072265625,
+											"width": 106.9072265625,
 											"height": 13,
-											"text": "(from Model1)"
+											"text": "(from pcassembly)"
 										},
 										{
 											"_type": "LabelView",
@@ -306,9 +306,9 @@
 											},
 											"visible": false,
 											"font": "Arial;13;0",
-											"width": 80.9072265625,
+											"width": 106.9072265625,
 											"height": 13,
-											"text": "(from Model1)"
+											"text": "(from pcassembly)"
 										},
 										{
 											"_type": "LabelView",
@@ -529,9 +529,9 @@
 											"font": "Arial;13;0",
 											"left": -16,
 											"top": 704,
-											"width": 80.9072265625,
+											"width": 106.9072265625,
 											"height": 13,
-											"text": "(from Model1)"
+											"text": "(from pcassembly)"
 										},
 										{
 											"_type": "LabelView",
@@ -741,9 +741,9 @@
 											"font": "Arial;13;0",
 											"left": 16,
 											"top": 704,
-											"width": 80.9072265625,
+											"width": 106.9072265625,
 											"height": 13,
-											"text": "(from Model1)"
+											"text": "(from pcassembly)"
 										},
 										{
 											"_type": "LabelView",
@@ -1000,9 +1000,9 @@
 											},
 											"visible": false,
 											"font": "Arial;13;0",
-											"width": 80.9072265625,
+											"width": 106.9072265625,
 											"height": 13,
-											"text": "(from Model1)"
+											"text": "(from pcassembly)"
 										},
 										{
 											"_type": "LabelView",
@@ -1238,9 +1238,9 @@
 											"visible": false,
 											"font": "Arial;13;0",
 											"top": 32,
-											"width": 80.9072265625,
+											"width": 106.9072265625,
 											"height": 13,
-											"text": "(from Model1)"
+											"text": "(from pcassembly)"
 										},
 										{
 											"_type": "LabelView",
@@ -1545,9 +1545,9 @@
 											},
 											"visible": false,
 											"font": "Arial;13;0",
-											"width": 80.9072265625,
+											"width": 106.9072265625,
 											"height": 13,
-											"text": "(from Model1)"
+											"text": "(from pcassembly)"
 										},
 										{
 											"_type": "LabelView",
@@ -1747,9 +1747,9 @@
 											},
 											"visible": false,
 											"font": "Arial;13;0",
-											"width": 80.9072265625,
+											"width": 106.9072265625,
 											"height": 13,
-											"text": "(from Model1)"
+											"text": "(from pcassembly)"
 										},
 										{
 											"_type": "LabelView",

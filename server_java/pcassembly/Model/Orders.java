@@ -1,15 +1,16 @@
+package pcassembly.Model;
 
 import java.util.*;
 
 /**
  * 
  */
-public class Users {
+public class Orders {
 
     /**
      * Default constructor
      */
-    public Users() {
+    public Orders() {
     }
 
     /**
@@ -20,16 +21,11 @@ public class Users {
     /**
      * 
      */
-    public String email;
+    public String trackingNumber;
 
     /**
      * 
      */
-    public String name;
-
-    /**
-     * 
-     */
-    public String password;
+    public String OrderID;
 
 }

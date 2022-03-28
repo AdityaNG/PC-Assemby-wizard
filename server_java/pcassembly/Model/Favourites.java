@@ -1,15 +1,16 @@
+package pcassembly.Model;
 
 import java.util.*;
 
 /**
  * 
  */
-public class Cart {
+public class Favourites {
 
     /**
      * Default constructor
      */
-    public Cart() {
+    public Favourites() {
     }
 
     /**
@@ -21,10 +22,5 @@ public class Cart {
      * 
      */
     public UUID itemUUID;
-
-    /**
-     * 
-     */
-    public int quantity;
 
 }

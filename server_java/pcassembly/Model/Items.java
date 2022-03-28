@@ -1,5 +1,7 @@
+package pcassembly.Model;
 
 import java.util.*;
+import java.net.*;
 
 /**
  * 
