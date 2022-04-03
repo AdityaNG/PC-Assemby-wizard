@@ -1,6 +1,6 @@
 # PC Assemby wizard
 
-![demo](https://github.com/AdityaNG/PC-Assemby-wizard/blob/master/media/demo.gif?raw=true)
+<img src="media/java_login.png">
 
 ## About the project
 
