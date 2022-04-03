@@ -27,8 +27,7 @@ public class Main {
          }
 
       } catch ( Exception e ) {
-         System.err.println( e.getClass().getName()+": "+ e.getMessage() );
-         System.exit(0);
+         e.printStackTrace();
       }
       System.out.println("Operation done successfully");
    }

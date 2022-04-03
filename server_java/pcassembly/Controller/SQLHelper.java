@@ -18,8 +18,7 @@ public class SQLHelper {
 
    public SQLHelper() throws SQLException, ClassNotFoundException {
       Class.forName("org.postgresql.Driver");
-      c = DriverManager
-         .getConnection("jdbc:postgresql://localhost:5432/pc_assembly",
+      c = DriverManager .getConnection("jdbc:postgresql://localhost:5432/pc_assembly",
          "postgres", "12345678");
       c.setAutoCommit(false);
       System.out.println("Opened database successfully");
