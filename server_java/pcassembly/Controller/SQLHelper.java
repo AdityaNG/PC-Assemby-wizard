@@ -45,12 +45,14 @@ public class SQLHelper {
       }
    }
 
+   private Users loggedInUser;
+
    public boolean userLoginCheck(String name, String password) {
       boolean res = false;
       try {
          ResultSet rs;
          synchronized (this) { 
-            rs = this.runCommand( "SELECT * FROM USERS WHERE name=" + name + " and password=" + password + ";" );
+            rs = this.runCommand("SELECT * FROM USERS WHERE name='" + name + "' and password='" + password + "';" );
          }
          while ( rs.next() ) {
             res = true;
@@ -61,6 +63,7 @@ public class SQLHelper {
             i.password = rs.getString("password");
 
             System.out.println("User Login : " + i.toString());
+            this.loggedInUser = i;
          }
          rs.close();  
       } catch (Exception e) {
@@ -76,7 +79,7 @@ public class SQLHelper {
       try {
          ResultSet rs;
          synchronized (this) { 
-            rs = this.runCommand("SELECT * FROM USERS WHERE name=" + name + " and password=" + password + ";" );
+            rs = this.runCommand("SELECT * FROM USERS WHERE name='" + name + "' and password='" + password + "';" );
          }
          rs.close();  
       } catch (Exception e) {
@@ -135,6 +138,23 @@ public class SQLHelper {
       }
       System.out.println("Got" + String.valueOf(items.size()) + " items");
       return items;
+   }
+
+   public void addToCart(UUID itemUUID, int quantity) {
+      // TODO: Update or Add (user_uuid=this.loggedInUser.userUUID,item_uuid=itemUUID,Quantity=quantity) from table Cart
+      // this.loggedInUser.userUUID;
+   }
+
+   public void removeFromCart(UUID itemUUID) {
+      // TODO: Remove (user_uuid=this.loggedInUser.userUUID,item_uuid=itemUUID) from table Cart
+      // this.loggedInUser.userUUID;
+   }
+
+   public int calculateCartTotal() {
+      // TODO: Calculate (user_uuid=this.loggedInUser.userUUID) from table Cart weighted cart total
+      // this.loggedInUser.userUUID;
+      // SELECT sum(cart.quantity * price) FROM cart JOIN items ON items.item_uuid=cart.item_uuid WHERE user_uuid='u001';
+      return 0;
    }
 
 
