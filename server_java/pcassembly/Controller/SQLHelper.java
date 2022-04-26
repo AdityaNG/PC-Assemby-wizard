@@ -25,6 +25,12 @@ public class SQLHelper {
       } catch (Exception e) {
          e.printStackTrace();
       }
+
+      this.loggedInUser = new Users();
+      this.loggedInUser.userUUID = "u001";
+      this.loggedInUser.email = "adityang5@gmail.com";
+      this.loggedInUser.name = "Aditya NG";
+      this.loggedInUser.password = "12345678";
    }
 
    // Singleton 
