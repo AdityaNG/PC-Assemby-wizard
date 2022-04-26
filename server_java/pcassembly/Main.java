@@ -9,25 +9,16 @@ import java.util.ArrayList;
 public class Main {
    public static void main( String args[] ) {
       
-      try {
-         SQLHelper s = new SQLHelper();
-         ArrayList<Items> items = s.getAllItems();
+      SQLHelper s = SQLHelper.getSqlHelper();
+      //s.userLoginCheck("adityang5@gmail.com", "00000000");
 
-         GUI g = new GUI(items);
-         g.startGUI();
+      GUI g = new GUI();
+      g.startGUI();
          
-         for (Items i : items) {
-            System.out.println(i.itemName);
-         }
-
-         ArrayList<Users> users = s.getAllUsers();
+      ArrayList<Users> users = s.getAllUsers();
          
-         for (Users i : users) {
-            System.out.println(i.email);
-         }
-
-      } catch ( Exception e ) {
-         e.printStackTrace();
+      for (Users i : users) {
+         System.out.println(i.email);
       }
       System.out.println("Operation done successfully");
    }
