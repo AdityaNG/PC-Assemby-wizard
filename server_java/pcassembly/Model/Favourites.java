@@ -16,11 +16,11 @@ public class Favourites {
     /**
      * 
      */
-    public UUID userUUID;
+    public String userUUID;
 
     /**
      * 
      */
-    public UUID itemUUID;
+    public String itemUUID;
 
 }

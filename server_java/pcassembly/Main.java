@@ -10,7 +10,6 @@ public class Main {
    public static void main( String args[] ) {
       
       SQLHelper s = SQLHelper.getSqlHelper();
-      //s.userLoginCheck("adityang5@gmail.com", "00000000");
 
       GUI g = new GUI();
       g.startGUI();

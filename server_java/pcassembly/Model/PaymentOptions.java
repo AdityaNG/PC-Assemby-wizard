@@ -16,7 +16,7 @@ public class PaymentOptions {
     /**
      * 
      */
-    public UUID userUUID;
+    public String userUUID;
 
     /**
      * 

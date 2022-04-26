@@ -47,6 +47,10 @@ public class SQLHelper {
 
    private Users loggedInUser;
 
+   public Users getCurrectUser() {
+      return loggedInUser;
+   }
+
    public boolean userLoginCheck(String name, String password) {
       boolean res = false;
       try {
@@ -57,7 +61,8 @@ public class SQLHelper {
          while ( rs.next() ) {
             res = true;
             Users i = new Users();
-            i.userUUID = UUID.nameUUIDFromBytes(rs.getString("user_uuid").getBytes());
+            //i.userUUID = UUID.nameUUIDFromBytes(rs.getString("user_uuid").getBytes());
+            i.userUUID = rs.getString("user_uuid");
             i.name = rs.getString("name");
             i.email = rs.getString("email");
             i.password = rs.getString("password");
@@ -98,7 +103,8 @@ public class SQLHelper {
          }
          while ( rs.next() ) {
             Users i = new Users();
-            i.userUUID = UUID.nameUUIDFromBytes(rs.getString("user_uuid").getBytes());
+            //i.userUUID = UUID.nameUUIDFromBytes(rs.getString("user_uuid").getBytes());
+            i.userUUID = rs.getString("user_uuid");
             i.name = rs.getString("name");
             i.email = rs.getString("email");
             i.password = rs.getString("password");
@@ -121,13 +127,15 @@ public class SQLHelper {
          }
          while ( rs.next() ) {
             Items i = new Items();
-            i.itemUUID = UUID.nameUUIDFromBytes(rs.getString("item_uuid").getBytes());
+            //i.itemUUID = UUID.nameUUIDFromBytes(rs.getString("item_uuid").getBytes());
+            i.itemUUID = rs.getString("item_uuid");
             i.itemName = rs.getString("item_name");
             i.itemDescription = rs.getString("item_description");
             i.imageURL = new URL(rs.getString("imageURL"));
             i.productURL = new URL(rs.getString("productURL"));
                
-            i.typeUUID = UUID.nameUUIDFromBytes(rs.getString("type_uuid").getBytes());
+            //i.typeUUID = UUID.nameUUIDFromBytes(rs.getString("type_uuid").getBytes());
+            i.typeUUID = rs.getString("type_uuid");
             i.typeName = rs.getString("type_name");
 
             items.add(i);

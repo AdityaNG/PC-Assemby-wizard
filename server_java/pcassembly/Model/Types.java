@@ -16,7 +16,7 @@ public class Types {
     /**
      * 
      */
-    public UUID typeUUID;
+    public String typeUUID;
 
     /**
      * 

@@ -16,7 +16,7 @@ public class Users {
     /**
      * 
      */
-    public UUID userUUID;
+    public String userUUID;
 
     /**
      * 

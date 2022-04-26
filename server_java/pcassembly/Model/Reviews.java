@@ -16,12 +16,12 @@ public class Reviews {
     /**
      * 
      */
-    public UUID userUUID;
+    public String userUUID;
 
     /**
      * 
      */
-    public UUID itemUUID;
+    public String itemUUID;
 
     /**
      * 

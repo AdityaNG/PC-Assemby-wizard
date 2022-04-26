@@ -16,7 +16,7 @@ public class Orders {
     /**
      * 
      */
-    public UUID userUUID;
+    public String userUUID;
 
     /**
      * 

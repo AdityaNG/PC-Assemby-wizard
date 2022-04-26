@@ -14,7 +14,7 @@ public class Items {
     public Items() {
     }
 
-    public UUID itemUUID;
+    public String itemUUID;
 
     public String itemName;
 
@@ -24,7 +24,7 @@ public class Items {
 
     public URL productURL;
 
-    public UUID typeUUID;
+    public String typeUUID;
 
     public String typeName;
 
