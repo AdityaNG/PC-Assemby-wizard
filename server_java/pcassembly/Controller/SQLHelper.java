@@ -19,7 +19,7 @@ public class SQLHelper {
       try {
          Class.forName("org.postgresql.Driver");
          c = DriverManager .getConnection("jdbc:postgresql://localhost:5432/pc_assembly",
-            "postgres", "12345678");
+            "postgres","12345678");
          c.setAutoCommit(false);
          System.out.println("Opened database successfully");
       } catch (Exception e) {
@@ -90,7 +90,20 @@ public class SQLHelper {
       try {
          ResultSet rs;
          synchronized (this) { 
-            rs = this.runCommand("SELECT * FROM USERS WHERE name='" + name + "' and password='" + password + "';" );
+            rs = this.runCommand("SELECT * FROM USERS WHERE name='" + name + "';" );
+            res=true;
+            while (rs.next()) {
+               String n = rs.getString("name");
+               String p= rs.getString("password");
+               if(n==name)
+                  res = false;
+               else{
+                  res=true;
+               }
+             }
+             if(res==true)
+               this.runUpdate("INSERT INTO users(user_uuid, email, name, password) Values('u"+name+"','"+name+"','"+name+"@gmail.com', '"+password+"');");
+
          }
          rs.close();  
       } catch (Exception e) {
@@ -178,5 +191,11 @@ public class SQLHelper {
       //stmt.close();
       return rs;
    }
-
+   public int runUpdate(String q) throws SQLException, MalformedURLException {
+      stmt = c.createStatement();
+      int rowcount = stmt.executeUpdate( q );
+      stmt.close();
+      c.commit();
+      return rowcount;
+   }
 }
