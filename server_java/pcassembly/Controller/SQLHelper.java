@@ -19,7 +19,7 @@ public class SQLHelper {
       try {
          Class.forName("org.postgresql.Driver");
          c = DriverManager .getConnection("jdbc:postgresql://localhost:5432/pc_assembly",
-            "postgres", "12345678");
+            "Adi", "12345678");
          c.setAutoCommit(false);
          System.out.println("Opened database successfully");
       } catch (Exception e) {
@@ -62,7 +62,7 @@ public class SQLHelper {
       try {
          ResultSet rs;
          synchronized (this) { 
-            rs = this.runCommand("SELECT * FROM USERS WHERE name='" + name + "' and password='" + password + "';" );
+            rs = this.runCommand("SELECT * FROM USERS WHERE email='" + name + "' and password='" + password + "';" );
          }
          while ( rs.next() ) {
             res = true;

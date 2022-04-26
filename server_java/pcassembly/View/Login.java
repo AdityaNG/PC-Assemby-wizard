@@ -9,6 +9,8 @@ import java.awt.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
 import java.util.EventListener;
+import pcassembly.Controller.*;
+
 
 public class Login extends JFrame {
     private JTextField username, password;
@@ -30,7 +32,15 @@ public class Login extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO : Extract and send details
+                SQLHelper.getSqlHelper().userLoginCheck(username.getText(), password.getText());
                 eventListener.actionPerformed(new UIEvent(UIEvent.LOGIN, ""));
+                var email1=username.getText();
+                var p1=password.getText();
+                     if(SQLHelper.getSqlHelper().LoginUser(email1, p1))
+                         err.setText("User Login Successful");
+                     else
+                         err.setText("Invalid Username/Password combination");
+
             }
         });
 
