@@ -10,6 +10,10 @@ public class Main {
    public static void main( String args[] ) {
       
       SQLHelper s = SQLHelper.getSqlHelper();
+/*      System.out.println(s.registerUser("delete", "dfascs"));
+      System.out.println(s.registerUser("adityang", "dfascs"));
+      System.out.println(s.registerUser("lol", "dfascs")); */
+
 
       /*
       System.out.println(s.registerUser('adityang5@gmail.com', 'dfascs'););

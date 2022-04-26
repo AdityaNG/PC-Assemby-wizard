@@ -8,7 +8,7 @@ import javax.imageio.*;
 import java.awt.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
-
+import pcassembly.Controller.*;
 public class Register extends JFrame {
     private JTextField username, password, passwordConfirm;
     private JButton login, register;
@@ -38,12 +38,19 @@ public class Register extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO : Extract and send details
-                eventListener.actionPerformed(new UIEvent(UIEvent.REGISTER, ""));
-
-                username.getText();
-                password.getText();
-                passwordConfirm.getText();
+                // eventListener.actionPerformed(new UIEvent(UIEvent.REGISTER, ""));
+                var u=username.getText();
+                var p=password.getText();
+                var pc=passwordConfirm.getText();
+                if(p.equals(pc))
+                    if(SQLHelper.getSqlHelper().registerUser(u, p))
+                        err.setText("User registered");
+                    else
+                        err.setText("Username already exixts");
+                else
+                    err.setText("passwords do not match");
             }
+            
         });
 
         this.setLayout(new GridLayout(2, 1));
