@@ -18,7 +18,7 @@ public class SQLHelper {
    private SQLHelper() {
       try {
          Class.forName("org.postgresql.Driver");
-         c = DriverManager .getConnection("jdbc:postgresql://localhost:5432/pc_assembly",
+         c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/pc_assembly",
             "postgres","12345678");
          c.setAutoCommit(false);
          System.out.println("Opened database successfully");
@@ -57,24 +57,18 @@ public class SQLHelper {
       return loggedInUser;
    }
 
-   public boolean userLoginCheck(String name, String password) {
+   public boolean userLoginCheck(String email, String password) {
       boolean res = false;
       try {
          ResultSet rs;
          synchronized (this) { 
-            rs = this.runCommand("SELECT * FROM USERS WHERE name='" + name + "' and password='" + password + "';" );
+            rs = this.runCommand("SELECT count(*) FROM USERS WHERE email='" + email + "' and password='" + password + "';" );
          }
-         while ( rs.next() ) {
+         rs.next();
+         if(rs.getInt("count")==1) {
             res = true;
-            Users i = new Users();
-            //i.userUUID = UUID.nameUUIDFromBytes(rs.getString("user_uuid").getBytes());
-            i.userUUID = rs.getString("user_uuid");
-            i.name = rs.getString("name");
-            i.email = rs.getString("email");
-            i.password = rs.getString("password");
-
-            System.out.println("User Login : " + i.toString());
-            this.loggedInUser = i;
+         } else {
+            res = false;
          }
          rs.close();  
       } catch (Exception e) {
@@ -169,7 +163,7 @@ public class SQLHelper {
          ResultSet rs;
          synchronized (this) { 
             //rs = this.runCommand( "SELECT * FROM ITEMS WHERE user_uuid='" + this.loggedInUser.userUUID + "' ;" );
-            rs = this.runCommand( "SELECT * FROM cart JOIN items ON cart.item_uuid=items.item_uuid WHERE user_uuid='" + this.loggedInUser.userUUID + "' ;" );
+            rs = this.runCommand( "SELECT * FROM cart JOIN items ON cart.item_uuid=items.item_uuid WHERE user_uuid='" + this.loggedInUser.userUUID + "' and cart.quantity>0;" );
          }
          while ( rs.next() ) {
             Items i = new Items();

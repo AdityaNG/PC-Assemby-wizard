@@ -10,9 +10,12 @@ public class Main {
    public static void main( String args[] ) {
       
       SQLHelper s = SQLHelper.getSqlHelper();
-/*      System.out.println(s.registerUser("delete", "dfascs"));
+      
+      /*    
+      System.out.println(s.registerUser("delete", "dfascs"));
       System.out.println(s.registerUser("adityang", "dfascs"));
-      System.out.println(s.registerUser("lol", "dfascs")); */
+      System.out.println(s.registerUser("lol", "dfascs"));
+      // */
 
 
       /*
@@ -23,7 +26,7 @@ public class Main {
       /* cartHasItem
       System.out.println(s.cartHasItem("1001"));
       System.out.println(s.cartHasItem("1002"));
-      */
+      // */
 
       /* addToCart
       s.addToCart("1001", 7);
@@ -37,7 +40,7 @@ public class Main {
       }
       //*/
 
-      ///*
+      // /*
       GUI g = new GUI();
       g.startGUI();
          

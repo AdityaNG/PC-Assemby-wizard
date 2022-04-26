@@ -46,9 +46,52 @@ public class MainView extends JFrame {
         JScrollPane scrollPane = new JScrollPane(ItemsPanel);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         this.add(scrollPane, BorderLayout.CENTER);
+
+        JMenuBar menuBar = new JMenuBar();;
+        JMenu jMenu;
+
+        jMenu = new JMenu("PC Assemby");
+        jMenu.setMnemonic(KeyEvent.VK_A);
+        jMenu.getAccessibleContext().setAccessibleDescription("The only menu in this program that has menu items");
+
+        menuBar.add(jMenu);
+
+        JMenuItem cartMenu;
+        cartMenu = new JMenuItem("Cart", KeyEvent.VK_T);
+        cartMenu.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+                eventListener.actionPerformed(new UIEvent(UIEvent.GOTO_CART, ""));
+            }
+
+        });
+        jMenu.add(cartMenu);
+
+        JMenuItem logoutMenu;
+        logoutMenu = new JMenuItem("Logout", KeyEvent.VK_U);
+        logoutMenu.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+                eventListener.actionPerformed(new UIEvent(UIEvent.LOGOUT, ""));
+            }
+
+        });
+        
+        jMenu.add(logoutMenu);
+
+
+        this.setJMenuBar(menuBar);
     }
 
     void setEventListener(UIEventListener el) {
         this.eventListener = el;
+    }
+
+    public void refresh() {
+        
     }
 }
