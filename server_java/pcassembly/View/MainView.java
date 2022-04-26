@@ -13,10 +13,12 @@ public class MainView extends JFrame {
     
     private ArrayList<Items> items;
     private UIEventListener eventListener;
+    private ArrayList<ProductView> productViews;
 
     public MainView() {
-        super("PC Assembly Wiz - MainView");
+        super("PC Assembly Wiz - Products");
 
+        productViews = new ArrayList<ProductView>();
         SQLHelper s = SQLHelper.getSqlHelper();
         this.items = s.getAllItems();
 
@@ -25,52 +27,20 @@ public class MainView extends JFrame {
         
 
         JPanel ItemsPanel = new JPanel();
-        GridLayout gl = new GridLayout(this.items.size(), 5);
+        GridLayout gl = new GridLayout(this.items.size(), 1);
         ItemsPanel.setLayout(gl);
         for (int index=0; index<this.items.size(); index++) {
             
             try {
-                Items i = this.items.get(index);
-                URL url = i.imageURL;
-                System.out.println(url.toString());
+                final Items i = this.items.get(index);
 
-                Image image = ImageIO.read(url);
-                image = image.getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH); 
-                ImageIcon icon = new ImageIcon(image);
-                final JLabel iconLabel = new JLabel(icon);
-                final JButton add = new JButton("Add");
-                final JButton remove = new JButton("Remove");
-                final JLabel countLabel = new JLabel("0");
-
-                add.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        System.out.println(e);
-                        int count = Integer.valueOf(countLabel.getText());
-                        countLabel.setText(String.valueOf(count+1));
-                    }
-                });
-
-                remove.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        System.out.println(e);
-                        int count = Integer.valueOf(countLabel.getText());
-                        if (count>0)
-                            countLabel.setText(String.valueOf(count-1));
-                    }
-                });
-                
-                ItemsPanel.add(new JLabel(i.itemName));
-                ItemsPanel.add(add);
-                ItemsPanel.add(remove);
-                ItemsPanel.add(countLabel);
-                ItemsPanel.add(iconLabel);
+                ProductView p = new ProductView(i);
+                productViews.add(p);
+                ItemsPanel.add(p);
             } catch (Exception e) {
                 e.printStackTrace();
             }
             
-    
         }
     
         JScrollPane scrollPane = new JScrollPane(ItemsPanel);

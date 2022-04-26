@@ -40,6 +40,8 @@ public class GUI {
                         registerFrame.setVisible(true);
                         break;
                 }
+
+                
             } 
         });
 

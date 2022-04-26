@@ -39,6 +39,7 @@ public class Login extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // TODO : Extract and send details
                 eventListener.actionPerformed(new UIEvent(UIEvent.GOTO_REGISTER, ""));
+                
             }
         });
 

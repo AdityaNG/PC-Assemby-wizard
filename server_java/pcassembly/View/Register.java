@@ -39,6 +39,10 @@ public class Register extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // TODO : Extract and send details
                 eventListener.actionPerformed(new UIEvent(UIEvent.REGISTER, ""));
+
+                username.getText();
+                password.getText();
+                passwordConfirm.getText();
             }
         });
 
