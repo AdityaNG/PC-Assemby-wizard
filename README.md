@@ -12,29 +12,19 @@ Clone the repository:
 
 ```bash
 git clone https://github.com/AdityaNG/PC-Assemby-wizard
+git checkout OOAD
 ```
 
 Create the database:
 
 ```bash
 sudo -u postgres -i
-psql < full_path/sql_gen/everything.sql
+# Use the full path to the everything.sql file
+psql < /home/aditya/LABS/PC-Assemby-wizard/sql_gen/everything.sql
 ```
 
-Start the server:
+Compile and run the app:
 
 ```bash
-cd server
-npm install
-npm start
+make run
 ```
-
-Start the client:
-
-```bash
-cd client
-npm install
-npm start
-```
-
-Open browser at http://localhost:3000
