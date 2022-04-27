@@ -47,7 +47,7 @@ public class Main {
       ArrayList<Users> users = s.getAllUsers();
          
       for (Users i : users) {
-         System.out.println(i.email);
+         System.out.println(i.getEmail());
       }
       System.out.println("Operation done successfully");
       //*/

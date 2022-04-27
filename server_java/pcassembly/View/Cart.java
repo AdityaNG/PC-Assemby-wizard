@@ -3,6 +3,7 @@ package pcassembly.View;
 import pcassembly.Controller.*;
 import pcassembly.Model.*;
 import javax.swing.*;
+import javax.swing.border.*;
 import java.util.ArrayList;
 import java.net.*;
 import javax.imageio.*;
@@ -73,6 +74,9 @@ public class Cart extends JFrame {
         this.items = s.getCart();
 
         ItemsPanel = new JPanel();
+        Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
+        ItemsPanel.setBorder(padding);
+        
         gl = new GridLayout(this.items.size(), 1);
 
         productViews = new ArrayList<ProductView>();
@@ -92,6 +96,7 @@ public class Cart extends JFrame {
         scrollPane = new JScrollPane(ItemsPanel);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         this.add(scrollPane, BorderLayout.CENTER);
+
     }
 
     void setEventListener(UIEventListener el) {

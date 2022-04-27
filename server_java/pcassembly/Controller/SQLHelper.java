@@ -1,6 +1,8 @@
 package pcassembly.Controller;
 
 import pcassembly.Model.*;
+import pcassembly.Model.Users. UserBuilder;
+
 import java.util.*;
 import java.net.*;
 import java.sql.Connection;
@@ -25,12 +27,14 @@ public class SQLHelper {
       } catch (Exception e) {
          e.printStackTrace();
       }
-
-      this.loggedInUser = new Users();
-      this.loggedInUser.userUUID = "u001";
-      this.loggedInUser.email = "adityang5@gmail.com";
-      this.loggedInUser.name = "Aditya NG";
-      this.loggedInUser.password = "12345678";
+      UserBuilder ub = new Users.UserBuilder();
+      
+      this.loggedInUser = ub.userUUID("u001")
+         .email("adityang5@gmail.com")
+         .name("Aditya NG")
+         .password("12345678")
+         .generate();
+      
    }
 
    // Singleton 
@@ -110,13 +114,13 @@ public class SQLHelper {
             rs = this.runCommand( "SELECT * FROM USERS;" );
          }
          while ( rs.next() ) {
-            Users i = new Users();
-            //i.userUUID = UUID.nameUUIDFromBytes(rs.getString("user_uuid").getBytes());
-            i.userUUID = rs.getString("user_uuid");
-            i.name = rs.getString("name");
-            i.email = rs.getString("email");
-            i.password = rs.getString("password");
-
+            UserBuilder ub = new UserBuilder();
+            Users i = ub.userUUID(rs.getString("user_uuid"))
+            .email(rs.getString("email"))
+            .name(rs.getString("name"))
+            .password(rs.getString("password"))
+            .generate();
+            
             users.add(i);
          }
          rs.close();  
@@ -163,7 +167,7 @@ public class SQLHelper {
          ResultSet rs;
          synchronized (this) { 
             //rs = this.runCommand( "SELECT * FROM ITEMS WHERE user_uuid='" + this.loggedInUser.userUUID + "' ;" );
-            rs = this.runCommand( "SELECT * FROM cart JOIN items ON cart.item_uuid=items.item_uuid WHERE user_uuid='" + this.loggedInUser.userUUID + "' and cart.quantity>0;" );
+            rs = this.runCommand( "SELECT * FROM cart JOIN items ON cart.item_uuid=items.item_uuid WHERE user_uuid='" + this.loggedInUser.getUserUUID() + "' and cart.quantity>0;" );
          }
          while ( rs.next() ) {
             Items i = new Items();
@@ -212,7 +216,7 @@ public class SQLHelper {
       try {
          ResultSet rs;
          synchronized (this) { 
-            rs = this.runCommand( "SELECT * FROM cart JOIN items ON cart.item_uuid=items.item_uuid WHERE user_uuid='" + this.loggedInUser.userUUID + "' and cart.item_uuid='" + itemUUID + "' ;" );
+            rs = this.runCommand( "SELECT * FROM cart JOIN items ON cart.item_uuid=items.item_uuid WHERE user_uuid='" + this.loggedInUser.getUserUUID() + "' and cart.item_uuid='" + itemUUID + "' ;" );
          }
          while ( rs.next() ) {
             Items i = new Items();
@@ -275,12 +279,12 @@ public class SQLHelper {
       String command;
       if (this.cartHasItem(itemUUID)) {
          // Update
-         command = "UPDATE cart SET quantity='" + quantity + "' WHERE user_uuid='" + this.loggedInUser.userUUID + "' and item_uuid='" + itemUUID + "' ;" ;
+         command = "UPDATE cart SET quantity='" + quantity + "' WHERE user_uuid='" + this.loggedInUser.getUserUUID() + "' and item_uuid='" + itemUUID + "' ;" ;
          System.out.println("Update");
       } else {
          // Insert
          if (this.dbHasItem(itemUUID)) {
-            command = "INSERT INTO cart(user_uuid, item_uuid, quantity) Values('" + this.loggedInUser.userUUID + "','" + itemUUID + "'," + String.valueOf(quantity) + ");";
+            command = "INSERT INTO cart(user_uuid, item_uuid, quantity) Values('" + this.loggedInUser.getUserUUID() + "','" + itemUUID + "'," + String.valueOf(quantity) + ");";
             System.out.println("Insert");
          } else {
             System.out.println("Item not exist");

@@ -3,6 +3,7 @@ package pcassembly.View;
 import pcassembly.Controller.*;
 import pcassembly.Model.*;
 import javax.swing.*;
+import javax.swing.border.*;
 import java.util.ArrayList;
 import java.net.*;
 import javax.imageio.*;
@@ -29,6 +30,8 @@ public class MainView extends JFrame {
         JPanel ItemsPanel = new JPanel();
         GridLayout gl = new GridLayout(this.items.size(), 1);
         ItemsPanel.setLayout(gl);
+        Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
+        ItemsPanel.setBorder(padding);
         for (int index=0; index<this.items.size(); index++) {
             
             try {

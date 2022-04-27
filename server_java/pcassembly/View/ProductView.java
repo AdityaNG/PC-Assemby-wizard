@@ -23,11 +23,12 @@ public class ProductView extends JComponent {
         Image image = ImageIO.read(url);
         image = image.getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH); 
         ImageIcon icon = new ImageIcon(image);
-        final JLabel iconLabel = new JLabel(icon);
+        final JLabel iconLabel = new JLabel(icon, SwingConstants.CENTER);
         final JButton add = new JButton("Add");
         final JButton remove = new JButton("Remove");
         final JLabel countLabel = new JLabel(
-            String.valueOf(SQLHelper.getSqlHelper().getItemCountInCart(i.itemUUID))
+            String.valueOf(SQLHelper.getSqlHelper().getItemCountInCart(i.itemUUID)),
+            SwingConstants.CENTER
         ); 
 
         add.addActionListener(new ActionListener() {
@@ -52,7 +53,7 @@ public class ProductView extends JComponent {
             }
         });
                 
-        this.add(new JLabel(i.itemName));
+        this.add(new JLabel(i.itemName, SwingConstants.CENTER));
         this.add(add);
         this.add(remove);
         this.add(countLabel);

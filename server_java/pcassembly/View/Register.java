@@ -7,6 +7,7 @@ import java.net.*;
 import javax.imageio.*;
 import java.awt.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.border.*;
 import java.awt.event.*;
 import pcassembly.Controller.*;
 public class Register extends JFrame {
@@ -24,7 +25,7 @@ public class Register extends JFrame {
         passwordConfirm = new JTextField();
         login = new JButton("Login");
         register = new JButton("Register");
-        err = new JLabel();
+        err = new JLabel("", SwingConstants.CENTER);
 
         login.addActionListener(new ActionListener() {
             @Override
@@ -60,8 +61,12 @@ public class Register extends JFrame {
 
         JPanel buttonsPanelRegister = new JPanel();
         buttonsPanelRegister.setLayout(new GridLayout(3, 1));
+
+        Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
+        usernamePasswordConfirmPanel.setBorder(padding);
+        buttonsPanelRegister.setBorder(padding);
         
-        err.setText("Err: message");
+        err.setText("");
 
         usernamePasswordConfirmPanel.add(new JLabel("Username"));
         usernamePasswordConfirmPanel.add(username);
